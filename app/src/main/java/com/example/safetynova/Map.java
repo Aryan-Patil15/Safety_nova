@@ -1,10 +1,15 @@
 package com.example.safetynova;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.Manifest;
+import android.view.View;
+import android.widget.ImageButton;
+
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
@@ -12,6 +17,7 @@ import com.google.android.gms.tasks.*;
 public class Map extends AppCompatActivity {
     SupportMapFragment smf;
     FusedLocationProviderClient clent;
+    private ImageButton btnhome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +25,15 @@ public class Map extends AppCompatActivity {
         smf = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         clent = LocationServices.getFusedLocationProviderClient(this);
         getLocation();
+        btnhome = findViewById(R.id.nav_home);
+
+        btnhome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Map.this, home.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void getLocation() {
