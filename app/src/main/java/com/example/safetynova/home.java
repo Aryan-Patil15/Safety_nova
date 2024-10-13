@@ -29,26 +29,13 @@ public class home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         // Initialize buttons
-        btnView = findViewById(R.id.btn_view);
-        btnDismiss = findViewById(R.id.btn_dismiss);
+
         btnEmergencyLocation = findViewById(R.id.btn_emergency_location);
         btnEmergencyServices = findViewById(R.id.btn_emergency_services);
         btnLocation = findViewById(R.id.nav_maps);
 
         // Set click listeners
-        btnView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(home.this, "View button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        btnDismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(home.this, "Dismiss button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         btnEmergencyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
