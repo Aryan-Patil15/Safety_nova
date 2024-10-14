@@ -37,14 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/notification_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/baseline_notifications_24" />
-
             <ImageView
                 android:id="@+id/user_icon"
                 android:layout_width="24dp"
@@ -62,7 +54,7 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:weightSum="3"
-        android:paddingBottom="30dp">
+        android:paddingBottom="2dp">
 
         <ImageButton
             android:id="@+id/nav_home"
@@ -133,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/main_logo"
             android:gravity="center"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
             <Button
@@ -140,16 +133,17 @@
                 android:layout_width="0dp"
                 android:layout_height="59dp"
                 android:layout_marginEnd="15dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#a81c07"
-                android:text="Emergency Location Sharing"
+                android:text="Crises Alert"
                 android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_emergency_services"
                 android:layout_width="0dp"
                 android:layout_height="59dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#a81c07"
                 android:text="Emergency Services"
