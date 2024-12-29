@@ -1,14 +1,12 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/main_logo"
-        android:layout_width="500dp"
-        android:layout_height="300dp"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:layout_marginTop="80dp"
-        android:layout_marginBottom="5dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/icon" />
 
@@ -18,25 +16,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/main_logo"
         android:gravity="center"
-        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_emergency_location"
+            android:id="@+id/btn_emergency_location_fragment"
             android:layout_width="0dp"
             android:layout_height="59dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:backgroundTint="#a81c07"
             android:text="Crises Alert"
             android:textColor="#FFFFFF" />
 
         <Button
-            android:id="@+id/btn_emergency_services"
+            android:id="@+id/btn_emergency_services_fragment"
             android:layout_width="0dp"
             android:layout_height="59dp"
-            android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:backgroundTint="#a81c07"
             android:text="Emergency Services"
@@ -44,12 +39,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_location"
+        android:id="@+id/btn_location_fragment"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_below="@id/button_container"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:background="@drawable/circle_sos_button"
         android:text="SOS"
         android:textColor="#FFFFFF"
