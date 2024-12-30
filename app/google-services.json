@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "193867853435",
+    "firebase_url": "https://safetynova-27b76-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "safetynova-27b76",
+    "storage_bucket": "safetynova-27b76.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193867853435:android:732f40f01e9e4e951ffcde",
+        "android_client_info": {
+          "package_name": "com.example.firebaseconnection"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA50eZPS-0jFNY6Y4aXi3RPWKEnewcndjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193867853435:android:56e0501be608314e1ffcde",
+        "android_client_info": {
+          "package_name": "com.example.safetynova"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA50eZPS-0jFNY6Y4aXi3RPWKEnewcndjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
