@@ -1,5 +1,6 @@
 package com.example.safetynova;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,10 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.btn_emergency_location_fragment).setOnClickListener(v ->
                 Toast.makeText(getContext(), "Crises Alert clicked", Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.btn_emergency_services_fragment).setOnClickListener(v ->
-                Toast.makeText(getContext(), "Emergency Services clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.btn_emergency_services_fragment).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), Emergencyservices.class);
+            startActivity(intent);
+        });
 
         view.findViewById(R.id.btn_location_fragment).setOnClickListener(v ->
                 Toast.makeText(getContext(), "SOS clicked", Toast.LENGTH_SHORT).show());
