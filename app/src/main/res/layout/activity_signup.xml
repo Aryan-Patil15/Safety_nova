@@ -6,14 +6,17 @@
     android:id="@+id/signup_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F7FC">
+    android:background="@drawable/city">
 
     <!-- App Title -->
+
+    <!-- Welcome Text -->
+
     <TextView
         android:id="@+id/signup_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:text="Sign Up"
         android:textColor="#e34540"
         android:textSize="30sp"
@@ -22,12 +25,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="1dp"
         android:text="Welcome,"
         android:fontFamily="sans-serif"
         android:textStyle="italic"
@@ -42,7 +44,7 @@
     <EditText
         android:id="@+id/full_name_input"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
@@ -58,7 +60,7 @@
     <EditText
         android:id="@+id/email_input"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="15dp"
@@ -74,7 +76,7 @@
     <EditText
         android:id="@+id/phone_input"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="15dp"
@@ -90,7 +92,7 @@
     <EditText
         android:id="@+id/dob_input"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="15dp"
@@ -107,7 +109,7 @@
     <EditText
         android:id="@+id/password_input"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="15dp"
@@ -123,7 +125,7 @@
     <EditText
         android:id="@+id/confirm_password_input"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="15dp"
@@ -152,45 +154,90 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Remember Me Checkbox -->
-    <CheckBox
-        android:id="@+id/remember_me_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="40dp"
-        android:text="Remember me"
-        android:textColor="#808080"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signup_button" />
-
-    <!-- Already have an account? -->
     <LinearLayout
         android:id="@+id/login_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_width="300dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/remember_me_checkbox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
+        app:layout_constraintTop_toBottomOf="@id/signup_button">
+        <!-- Already have an account? -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account?"
-            android:textColor="#e34540" />
+            android:text="Already have an account? "
+            android:textColor="#e34540"
+            tools:layout_editor_absoluteX="174dp"
+            tools:layout_editor_absoluteY="548dp" />
 
         <TextView
             android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="Login"
             android:textColor="#3498db"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="342dp"
+            tools:layout_editor_absoluteY="548dp" />
     </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/remember_me_checkbox"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Remember me"
+        android:textColor="#808080"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_button" />
+    <!-- Social Media Login -->
+    <TextView
+        android:id="@+id/social_media_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Or Sign Up with"
+        android:textColor="#808080"
+        app:layout_constraintTop_toBottomOf="@+id/remember_me_checkbox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp"/>
+
+    <!-- Social Media Icons -->
+    <LinearLayout
+        android:id="@+id/social_media_icons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/social_media_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:layout_marginTop="12dp">
+
+        <ImageView
+            android:id="@+id/facebook_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_facebook"
+            android:layout_marginEnd="30dp"/>
+
+        <ImageView
+            android:id="@+id/instagram_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_instagram"
+            android:layout_marginEnd="30dp"/>
+
+        <ImageView
+            android:id="@+id/linkedin_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_linkedin"/>
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
