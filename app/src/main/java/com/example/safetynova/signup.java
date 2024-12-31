@@ -2,15 +2,21 @@ package com.example.safetynova;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
+import android.view.MotionEvent;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.text.TextWatcher;
 import java.util.Calendar;
 
 public class signup extends AppCompatActivity {
@@ -18,6 +24,7 @@ public class signup extends AppCompatActivity {
     private EditText emailInput, phoneInput, passwordInput, confirmPasswordInput, dobInput, fullNameInput;
     private Button signUpButton;
     private TextView loginText;
+    boolean isPasswordVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +40,9 @@ public class signup extends AppCompatActivity {
         dobInput = findViewById(R.id.dob_input);  // Date of Birth Input
         signUpButton = findViewById(R.id.signup_button);
         loginText = findViewById(R.id.login);
-
+        String password = passwordInput.getText().toString();
+        String confirmPassword = confirmPasswordInput.getText().toString();
+        isPasswordVisible = false;
         // Set Date of Birth field click listener
         dobInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +58,6 @@ public class signup extends AppCompatActivity {
                 String fullName = fullNameInput.getText().toString();
                 String email = emailInput.getText().toString();
                 String phone = phoneInput.getText().toString();
-                String password = passwordInput.getText().toString();
-                String confirmPassword = confirmPasswordInput.getText().toString();
                 String dob = dobInput.getText().toString();  // Get date of birth input
 
                 if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob.isEmpty()) {
@@ -72,6 +79,70 @@ public class signup extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        confirmPasswordInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Optional: Implement actions before text is changed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Dynamically fetch the password value
+                String password = passwordInput.getText().toString();
+                String confirmPassword = confirmPasswordInput.getText().toString();
+
+                // Compare passwords and set error
+                if (!confirmPassword.equals(password)) {
+                    confirmPasswordInput.setError("Passwords do not match");
+                } else {
+                    confirmPasswordInput.setError(null); // Clear the error
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Optional: Implement actions after text is changed
+            }
+        });
+
+        passwordInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
+                        // Save current padding
+                        int paddingStart = passwordInput.getPaddingStart();
+                        int paddingTop = passwordInput.getPaddingTop();
+                        int paddingEnd = passwordInput.getPaddingEnd();
+                        int paddingBottom = passwordInput.getPaddingBottom();
+
+                        if (isPasswordVisible) {
+                            passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                            passwordInput.post(() -> {
+                                passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
+                            });
+                        } else {
+                            passwordInput.setTransformationMethod(null);
+                            passwordInput.post(() -> {
+                                passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
+                            });
+                        }
+
+                        // Toggle visibility state
+                        isPasswordVisible = !isPasswordVisible;
+
+                        // Reapply padding and stabilize layout
+                        passwordInput.setPadding(paddingStart, paddingTop, paddingEnd, paddingBottom);
+                        passwordInput.setSelection(passwordInput.getText().length());
+                        passwordInput.requestLayout();
+                        passwordInput.invalidate();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
     }
 
 
