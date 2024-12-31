@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Crises Alert clicked", Toast.LENGTH_SHORT).show());
 
         view.findViewById(R.id.btn_emergency_services_fragment).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), Emergencyservices.class);
+            Intent intent = new Intent(getActivity(), Emergencyser.class);
             startActivity(intent);
         });
 
