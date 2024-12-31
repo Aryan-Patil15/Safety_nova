@@ -154,17 +154,17 @@
         android:layout_marginTop="10dp">
 
         <ImageView
+            android:id="@+id/google_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/google"
+            android:layout_marginEnd="30dp"/>
+
+        <ImageView
             android:id="@+id/facebook_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_facebook"
-            android:layout_marginEnd="30dp"/>
-
-        <ImageView
-            android:id="@+id/instagram_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_instagram"
             android:layout_marginEnd="30dp"/>
 
         <ImageView
