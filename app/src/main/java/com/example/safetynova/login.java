@@ -42,7 +42,7 @@ public class login extends AppCompatActivity {
         googleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(login.this, "Login with Instagram", Toast.LENGTH_SHORT).show();
+                Toast.makeText(login.this, "Login with Google", Toast.LENGTH_SHORT).show();
             }
         });
 
