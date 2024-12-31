@@ -105,7 +105,43 @@ public class signup extends AppCompatActivity {
             }
         });
 
+        passwordInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
+                        // Save current padding
+                        int paddingStart = passwordInput.getPaddingStart();
+                        int paddingTop = passwordInput.getPaddingTop();
+                        int paddingEnd = passwordInput.getPaddingEnd();
+                        int paddingBottom = passwordInput.getPaddingBottom();
 
+                        if (isPasswordVisible) {
+                            passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                            passwordInput.post(() -> {
+                                passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
+                            });
+                        } else {
+                            passwordInput.setTransformationMethod(null);
+                            passwordInput.post(() -> {
+                                passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
+                            });
+                        }
+
+                        // Toggle visibility state
+                        isPasswordVisible = !isPasswordVisible;
+
+                        // Reapply padding and stabilize layout
+                        passwordInput.setPadding(paddingStart, paddingTop, paddingEnd, paddingBottom);
+                        passwordInput.setSelection(passwordInput.getText().length());
+                        passwordInput.requestLayout();
+                        passwordInput.invalidate();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
 
