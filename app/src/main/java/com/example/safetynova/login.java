@@ -27,7 +27,7 @@ public class login extends AppCompatActivity {
         passwordInput = findViewById(R.id.password_input);
         loginButton = findViewById(R.id.login_button);
         facebookIcon = findViewById(R.id.facebook_icon);
-        instagramIcon = findViewById(R.id.instagram_icon);
+        instagramIcon = findViewById(R.id.google_icon);
         linkedinIcon = findViewById(R.id.linkedin_icon);
         t = findViewById(R.id.signup);
 
@@ -42,7 +42,7 @@ public class login extends AppCompatActivity {
         instagramIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(login.this, "Login with Instagram", Toast.LENGTH_SHORT).show();
+                Toast.makeText(login.this, "Login with Google", Toast.LENGTH_SHORT).show();
             }
         });
 
