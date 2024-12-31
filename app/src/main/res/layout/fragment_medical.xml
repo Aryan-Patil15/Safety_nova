@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/city"
+    tools:context=".Medical">
+
+
+    <!-- User's Name -->
+    <TextView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="serif-bold"
+        android:text="Medical Information"
+        android:textColor="#e34540"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label_full_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Full Name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="id/full_name"
+        app:layout_constraintTop_toBottomOf="@id/logo"/>
+
+    <TextView
+        android:id="@+id/full_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="John Doe"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/label_full_name"
+        app:layout_constraintTop_toBottomOf="@id/label_full_name"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Blood Group -->
+    <TextView
+        android:id="@+id/label_blood_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Blood Group"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/full_name"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/blood_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="O+"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/label_blood_group"
+        app:layout_constraintTop_toBottomOf="@id/label_blood_group"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Allergies -->
+    <TextView
+        android:id="@+id/label_allergies"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Allergies"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blood_group"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/allergies"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Peanuts, Pollen"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/label_allergies"
+        app:layout_constraintTop_toBottomOf="@id/label_allergies"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Medical Conditions -->
+    <TextView
+        android:id="@+id/label_medical_conditions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Medical Conditions"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/allergies"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/medical_conditions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Asthma, Diabetes"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/label_medical_conditions"
+        app:layout_constraintTop_toBottomOf="@id/label_medical_conditions"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Age -->
+    <TextView
+        android:id="@+id/label_age"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Age"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/medical_conditions"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="30 years 3 months"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/label_age"
+        app:layout_constraintTop_toBottomOf="@id/label_age"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
