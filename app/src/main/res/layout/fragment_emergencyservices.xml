@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".Emergencyser">
 
     <!-- Background -->
     <RelativeLayout
@@ -16,8 +17,8 @@
     <!-- Row 1 -->
     <ImageButton
         android:id="@+id/button1"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginLeft="46dp"
         android:layout_marginTop="46dp"
         android:background="@drawable/round_button"
@@ -26,12 +27,24 @@
         android:src="@drawable/img_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2" />
+        app:layout_constraintEnd_toStartOf="@+id/button2"/>
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Ambulance"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button1"
+        app:layout_constraintStart_toStartOf="@id/button1"
+        app:layout_constraintEnd_toEndOf="@id/button1" />
 
     <ImageButton
         android:id="@+id/button2"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginLeft="106dp"
         android:layout_marginTop="46dp"
         android:background="@drawable/round_button"
@@ -39,26 +52,49 @@
         android:scaleType="fitCenter"
         android:src="@drawable/img_2"
         app:layout_constraintStart_toEndOf="@id/button1"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"  />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Disaster Management"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button2"
+        app:layout_constraintStart_toStartOf="@id/button2"
+        app:layout_constraintEnd_toEndOf="@id/button2" />
 
     <!-- Row 2 -->
     <ImageButton
         android:id="@+id/button3"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="46dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 3"
         android:scaleType="fitCenter"
         android:src="@drawable/img_3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button1" />
+        app:layout_constraintStart_toStartOf="@id/button1"
+        app:layout_constraintTop_toBottomOf="@id/text1"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Fire Brigade"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button3"
+        app:layout_constraintStart_toStartOf="@id/button3"
+        app:layout_constraintEnd_toEndOf="@id/button3" />
 
     <ImageButton
         android:id="@+id/button4"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginLeft="106dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/round_button"
@@ -66,87 +102,168 @@
         android:scaleType="fitCenter"
         android:src="@drawable/img_4"
         app:layout_constraintStart_toEndOf="@id/button3"
-        app:layout_constraintTop_toBottomOf="@id/button2" />
+        app:layout_constraintTop_toBottomOf="@id/text2"/>
+
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Police"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button4"
+        app:layout_constraintStart_toStartOf="@id/button4"
+        app:layout_constraintEnd_toEndOf="@id/button4" />
 
     <!-- Row 3 -->
     <ImageButton
         android:id="@+id/button5"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="46dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 5"
         android:scaleType="fitCenter"
         android:src="@drawable/img_5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button3" />
+        app:layout_constraintStart_toStartOf="@id/button1"
+        app:layout_constraintTop_toBottomOf="@id/text3"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Women Safety"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button5"
+        app:layout_constraintStart_toStartOf="@id/button5"
+        app:layout_constraintEnd_toEndOf="@id/button5" />
 
     <ImageButton
         android:id="@+id/button6"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="106dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 6"
         android:scaleType="fitCenter"
         android:src="@drawable/img_6"
         app:layout_constraintStart_toEndOf="@id/button5"
-        app:layout_constraintTop_toBottomOf="@id/button4" />
+        app:layout_constraintTop_toBottomOf="@id/text4"
+        android:layout_marginLeft="106dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/text6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Road Accident"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button6"
+        app:layout_constraintStart_toStartOf="@id/button6"
+        app:layout_constraintEnd_toEndOf="@id/button6" />
 
     <!-- Row 4 -->
     <ImageButton
         android:id="@+id/button7"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="46dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 7"
         android:scaleType="fitCenter"
         android:src="@drawable/img_7"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button5" />
+        app:layout_constraintStart_toStartOf="@id/button1"
+        app:layout_constraintTop_toBottomOf="@id/text5"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Tuorist Helpline"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button7"
+        app:layout_constraintStart_toStartOf="@id/button7"
+        app:layout_constraintEnd_toEndOf="@id/button7" />
 
     <ImageButton
         android:id="@+id/button8"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="106dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 8"
         android:scaleType="fitCenter"
         android:src="@drawable/img_8"
         app:layout_constraintStart_toEndOf="@id/button7"
-        app:layout_constraintTop_toBottomOf="@id/button6" />
+        app:layout_constraintTop_toBottomOf="@id/text6"
+        android:layout_marginLeft="106dp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Cyber Crime"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button8"
+        app:layout_constraintStart_toStartOf="@id/button8"
+        app:layout_constraintEnd_toEndOf="@id/button8" />
 
     <!-- Row 5 -->
     <ImageButton
         android:id="@+id/button9"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="46dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 9"
         android:scaleType="fitCenter"
         android:src="@drawable/img_9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button7" />
+        app:layout_constraintStart_toStartOf="@id/button1"
+        app:layout_constraintTop_toBottomOf="@id/text7"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Senior Citizen"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button9"
+        app:layout_constraintStart_toStartOf="@id/button9"
+        app:layout_constraintEnd_toEndOf="@id/button9" />
 
     <ImageButton
         android:id="@+id/button10"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginLeft="106dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:contentDescription="Button 10"
         android:scaleType="fitCenter"
         android:src="@drawable/img_10"
         app:layout_constraintStart_toEndOf="@id/button9"
-        app:layout_constraintTop_toBottomOf="@id/button8" />
+        app:layout_constraintTop_toBottomOf="@id/text8"
+        android:layout_marginLeft="106dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/text10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Gas leak"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/button10"
+        app:layout_constraintStart_toStartOf="@id/button10"
+        app:layout_constraintEnd_toEndOf="@id/button10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
