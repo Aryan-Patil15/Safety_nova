@@ -1,5 +1,7 @@
 package com.example.safetynova;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +26,7 @@ public class Emergencyservices extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private Button button1;
     public Emergencyservices() {
         // Required empty public constructor
     }
@@ -61,4 +64,20 @@ public class Emergencyservices extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_emergencyservices, container, false);
     }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Button setup
+        Button button1 = view.findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:8080572754"));
+                startActivity(intent);
+            }
+        });
+    }
+
 }
