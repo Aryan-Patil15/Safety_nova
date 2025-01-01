@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class home extends AppCompatActivity {
 
-    private ImageButton btnmap;
+    private ImageButton btnhome,btnmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,13 @@ public class home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         loadFragment(new HomeFragment());
         btnmap=findViewById(R.id.nav_maps);
+        btnhome=findViewById(R.id.nav_home);
+        btnhome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new HomeFragment());
+            }
+        });
         btnmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
