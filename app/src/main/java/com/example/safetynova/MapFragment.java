@@ -1,73 +1,68 @@
 package com.example.safetynova;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MapFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private GoogleMap googleMap;
+    private ProgressDialog progressDialog;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    SupportMapFragment smf;
-    FusedLocationProviderClient clent;
+    // ActivityResultLauncher for permission requests
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    getUserLocation();
+                } else {
+                    Toast.makeText(requireContext(), "Permission denied. Please enable location access for this feature.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     public MapFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static MapFragment newInstance() {
+        return new MapFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        // Dynamically add SupportMapFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_container);
         if (mapFragment == null) {
             mapFragment = new SupportMapFragment();
@@ -78,16 +73,85 @@ public class MapFragment extends Fragment {
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
-                // Add marker or move the camera
-                LatLng location = new LatLng(37.7749, -122.4194); // Example: San Francisco
-                googleMap.addMarker(new MarkerOptions().position(location).title("Marker in San Francisco"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+            public void onMapReady(GoogleMap gMap) {
+                googleMap = gMap;
+                checkAndRequestPermissions();
             }
         });
 
-        return view; // Return the inflated view
+        return view;
     }
 
+    private void checkAndRequestPermissions() {
+        if (!isLocationEnabled()) {
+            promptEnableLocation();
+            return;
+        }
 
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            getUserLocation();
+        } else {
+            // Request the permission
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void promptEnableLocation() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Enable Location Services")
+                .setMessage("Location services are required for this feature. Please enable them in your settings.")
+                .setPositiveButton("Enable", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+
+                    // Recheck location settings when returning
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void getUserLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(requireContext(), "Location permission not granted.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show loading dialog
+        progressDialog = ProgressDialog.show(requireContext(), "Fetching Location", "Please wait...", true);
+
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
+            progressDialog.dismiss();
+            if (location != null) {
+                LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.clear(); // Clear any existing markers
+                googleMap.addMarker(new MarkerOptions().position(userLatLng).title("You are here"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15));
+            } else {
+                Toast.makeText(requireContext(), "Unable to fetch location. Try again later.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            progressDialog.dismiss();
+            Toast.makeText(requireContext(), "Failed to fetch location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new android.os.Handler().postDelayed(() -> {
+        // Check location services again after returning from settings
+        if (googleMap != null && isLocationEnabled()) {
+            checkAndRequestPermissions();
+        }
+        }, 2000); // 2 seconds delay
+    }
 }
