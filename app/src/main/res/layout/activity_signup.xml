@@ -143,12 +143,15 @@
 
     <!-- Sign Up Button -->
 
+    <!-- Social Media Login -->
+
+    <!-- Social Media Icons -->
+
     <Button
         android:id="@+id/signup_button"
-        android:layout_width="333dp"
+        android:layout_width="325dp"
         android:layout_height="55dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="0dp"
         android:layout_marginEnd="30dp"
         android:backgroundTint="#e34540"
         android:padding="12dp"
@@ -156,13 +159,8 @@
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/remember_me_checkbox" />
-
-    <!-- Social Media Login -->
-
-    <!-- Social Media Icons -->
 
     <LinearLayout
         android:id="@+id/login_text"
