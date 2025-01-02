@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +27,6 @@ public class Emergencyservices extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Button button1;
     public Emergencyservices() {
         // Required empty public constructor
     }
@@ -52,10 +52,6 @@ public class Emergencyservices extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -67,17 +63,46 @@ public class Emergencyservices extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Button setup
-        Button button1 = view.findViewById(R.id.button1);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                view.findViewById(R.id.button1).setOnClickListener(v-> {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:8080572754"));
-                startActivity(intent);
-            }
-        });
+                intent.setData(Uri.parse("tel:108"));
+                startActivity(intent);});
+                view.findViewById(R.id.button2).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:107"));
+                startActivity(intent);});
+                view.findViewById(R.id.button3).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:101"));
+                startActivity(intent);});
+                view.findViewById(R.id.button4).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:100"));
+                startActivity(intent);});
+                view.findViewById(R.id.button5).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:181"));
+                startActivity(intent);});
+                view.findViewById(R.id.button6).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:112"));
+                startActivity(intent);});
+                view.findViewById(R.id.button7).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:1363"));
+                startActivity(intent);});
+                view.findViewById(R.id.button8).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:1930"));
+                startActivity(intent);});
+                view.findViewById(R.id.button9).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:14567"));
+                startActivity(intent);});
+                view.findViewById(R.id.button10).setOnClickListener(v-> {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:1906"));
+                startActivity(intent);});
     }
 
 }

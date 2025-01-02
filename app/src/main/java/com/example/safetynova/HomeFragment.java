@@ -1,5 +1,7 @@
 package com.example.safetynova;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +26,21 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         button=view.findViewById(R.id.btn_emergency_services_fragment);
-        view.findViewById(R.id.btn_emergency_location_fragment).setOnClickListener(v ->
-                Toast.makeText(getContext(), "Crises Alert clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.btn_emergency_location_fragment).setOnClickListener(v ->{
+                Toast.makeText(getContext(), "Crises Alert clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:8080572754"));
+                    if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getContext(), "No app available to handle this action", Toast.LENGTH_SHORT).show();
+                    }
+            });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new MapFragment());
+                loadFragment(new Emergencyservices());
             }
         });
 
@@ -38,10 +48,9 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "SOS clicked", Toast.LENGTH_SHORT).show());
     }
     private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
