@@ -133,6 +133,7 @@
                 android:src="@drawable/baseline_contact_phone_24" />
 
             <TextView
+                android:id="@+id/trusted_contacts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -177,6 +178,7 @@
                 android:src="@drawable/baseline_medical_information_24" />
 
             <TextView
+                android:id="@+id/Medical_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"

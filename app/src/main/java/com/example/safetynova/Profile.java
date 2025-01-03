@@ -36,19 +36,32 @@ public class Profile extends Fragment {
         editProfileButton = view.findViewById(R.id.edit_profile_button);
 
         // Details section
-        userName = view.findViewById(R.id.details_container).findViewWithTag("userName");
-        userBirthday = view.findViewById(R.id.details_container).findViewWithTag("userBirthday");
-        userPhone = view.findViewById(R.id.details_container).findViewWithTag("userPhone");
-        userTrustedContacts = view.findViewById(R.id.details_container).findViewWithTag("userTrustedContacts");
-        userEmail = view.findViewById(R.id.details_container).findViewWithTag("userEmail");
-        userMedicalInfo = view.findViewById(R.id.details_container).findViewWithTag("userMedicalInfo");
+        userTrustedContacts = view.findViewById(R.id.trusted_contacts);
+        userMedicalInfo = view.findViewById(R.id.Medical_info);
 
         // Edit Profile Button functionality
         editProfileButton.setOnClickListener(v -> {
             // Implement action for editing the profile
-            // Example: Navigate to another fragment or open an edit screen
+        });
+
+        // Set up navigation for userMedicalInfo
+        userMedicalInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new Medical());
+            }
         });
 
         return view;
+    }
+
+
+    private void loadFragment(Fragment fragment) {
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment) // Ensure this ID matches your container in the activity layout
+                    .addToBackStack(null) // Optional: Allows the user to navigate back
+                    .commit();
+        }
     }
 }
