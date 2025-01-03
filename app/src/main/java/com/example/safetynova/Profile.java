@@ -43,15 +43,6 @@ public class Profile extends Fragment {
         userEmail = view.findViewById(R.id.details_container).findViewWithTag("userEmail");
         userMedicalInfo = view.findViewById(R.id.details_container).findViewWithTag("userMedicalInfo");
 
-        // Set data for UI components (hardcoded example data for now)
-        profileName.setText("Anna Avetisyan");
-        userName.setText("Anna Avetisyan");
-        userBirthday.setText("Birthday: 01/01/1990");
-        userPhone.setText("818 123 4567");
-        userTrustedContacts.setText("Trusted Contacts");
-        userEmail.setText("info@aplusdesign.co");
-        userMedicalInfo.setText("Medical Information");
-
         // Edit Profile Button functionality
         editProfileButton.setOnClickListener(v -> {
             // Implement action for editing the profile
