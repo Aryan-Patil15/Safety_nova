@@ -8,49 +8,42 @@
     android:background="@drawable/city"
     tools:context=".Profile">
 
-    <!-- Gradient Header -->
-    <View
-        android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Profile Title -->
 
     <!-- Profile Picture -->
     <TextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Profile"
+        android:layout_marginTop="16dp"
         android:fontFamily="serif-bold"
+        android:text="User Profile"
         android:textColor="#e34540"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/header_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/header_view"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/profile_picture"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/baseline_person_24"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_person_24"
+        app:layout_constraintTop_toBottomOf="@id/profile_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/header_view" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Details Section -->
     <LinearLayout
         android:id="@+id/details_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/header_view"
+        app:layout_constraintTop_toBottomOf="@id/profile_picture"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -58,8 +51,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
@@ -71,17 +64,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Anna Avetisyan"
-                android:textSize="20dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Birthday -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="30dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
@@ -91,19 +84,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="16dp"
                 android:text="Birthday"
-                android:textSize="20dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Phone -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="30dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
@@ -115,17 +108,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="818 123 4567"
-                android:textSize="20dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Trusted Contacts -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="30dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
@@ -137,18 +130,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Tusted Contacts"
-                android:textSize="20dp"
-                android:textColor="@android:color/black" />
+                android:text="Trusted Contacts"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Email -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="30dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
@@ -160,17 +153,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="info@aplusdesign.co"
-                android:textSize="20dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
         </LinearLayout>
 
-        <!-- Password -->
+        <!-- Medical Information -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="30dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
@@ -178,13 +171,13 @@
                 android:src="@drawable/baseline_medical_information_24" />
 
             <TextView
-                android:id="@+id/Medical_info"
+                android:id="@+id/medical_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="16dp"
                 android:text="Medical Information"
-                android:textSize="20dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -193,12 +186,15 @@
         android:id="@+id/edit_profile_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="104dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/rounded_button"
         android:text="Edit Profile"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_container"
+        app:layout_constraintVertical_bias="0.167" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,7 +37,7 @@ public class Profile extends Fragment {
 
         // Details section
         userTrustedContacts = view.findViewById(R.id.trusted_contacts);
-        userMedicalInfo = view.findViewById(R.id.Medical_info);
+        userMedicalInfo = view.findViewById(R.id.medical_info);
 
         // Edit Profile Button functionality
         editProfileButton.setOnClickListener(v -> {

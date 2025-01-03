@@ -1,12 +1,8 @@
 package com.example.safetynova;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
-
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.text.Editable;
@@ -67,6 +63,13 @@ public class signup extends AppCompatActivity {
                 } else {
                     // Add your sign-up logic here
                     Toast.makeText(signup.this, "Signing up...", Toast.LENGTH_SHORT).show();
+                    signUpButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(signup.this, MedicalForm.class);
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
         });
