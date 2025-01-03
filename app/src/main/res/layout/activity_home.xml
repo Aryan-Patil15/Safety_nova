@@ -39,12 +39,13 @@
         <!-- User Icon -->
         <ImageView
             android:id="@+id/user_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/baseline_person_24"
-            android:contentDescription="User Icon" />
+            android:layout_marginEnd="16dp"
+            android:contentDescription="User Icon"
+            android:src="@drawable/baseline_person_24" />
     </RelativeLayout>
 
     <!-- Home Fragment -->
