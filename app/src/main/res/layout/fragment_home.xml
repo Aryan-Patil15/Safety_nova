@@ -29,7 +29,7 @@
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:backgroundTint="#a81c07"
-            android:text="Crises Alert"
+            android:text="Live Location Sharing"
             android:textColor="#FFFFFF" />
 
         <!-- Emergency Services Button -->
@@ -44,7 +44,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_location_fragment"
+        android:id="@+id/SOS"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginTop="44dp"
