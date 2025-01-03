@@ -38,7 +38,7 @@ public class home extends AppCompatActivity {
         });
         btnuser.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) { loadFragment(new Profile());
+            public void onClick(View v) { loadFragment(new Profile());
 
             }
         });
