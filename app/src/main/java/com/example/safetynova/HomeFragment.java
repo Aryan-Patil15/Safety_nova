@@ -27,7 +27,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         button=view.findViewById(R.id.btn_emergency_services_fragment);
         view.findViewById(R.id.btn_emergency_location_fragment).setOnClickListener(v ->{
-                Toast.makeText(getContext(), "Crises Alert clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Live Location Shared", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:8080572754"));
                     if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
