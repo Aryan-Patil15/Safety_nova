@@ -1,8 +1,14 @@
 package com.example.safetynova;
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
+
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.text.Editable;
@@ -13,6 +19,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.text.TextWatcher;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.Calendar;
 
 public class signup extends AppCompatActivity {
@@ -21,10 +33,13 @@ public class signup extends AppCompatActivity {
     private Button signUpButton;
     private TextView loginText;
     boolean isPasswordVisible;
+    String fullName,email,phone,dob,password,confirmPassword;
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_signup);
 
         // Initialize UI components
@@ -36,9 +51,11 @@ public class signup extends AppCompatActivity {
         dobInput = findViewById(R.id.dob_input);  // Date of Birth Input
         signUpButton = findViewById(R.id.signup_button);
         loginText = findViewById(R.id.login);
-        String password = passwordInput.getText().toString();
-        String confirmPassword = confirmPasswordInput.getText().toString();
+
         isPasswordVisible = false;
+
+        fAuth= FirebaseAuth.getInstance();
+
         // Set Date of Birth field click listener
         dobInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,25 +68,22 @@ public class signup extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fullName = fullNameInput.getText().toString();
-                String email = emailInput.getText().toString();
-                String phone = phoneInput.getText().toString();
-                String dob = dobInput.getText().toString();  // Get date of birth input
+                fullName = fullNameInput.getText().toString();
+                email = emailInput.getText().toString();
+                phone = phoneInput.getText().toString();
+                dob = dobInput.getText().toString();  // Get date of birth input
+                password = passwordInput.getText().toString();
+                confirmPassword = confirmPasswordInput.getText().toString();
 
                 if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob.isEmpty()) {
                     Toast.makeText(signup.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                } else if(!(password.length() == 6))
+                {
+                    Toast.makeText(signup.this, "Password must have 6 characters", Toast.LENGTH_SHORT).show();
                 } else if (!password.equals(confirmPassword)) {
                     Toast.makeText(signup.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Add your sign-up logic here
-                    Toast.makeText(signup.this, "Signing up...", Toast.LENGTH_SHORT).show();
-                    signUpButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(signup.this, MedicalForm.class);
-                            startActivity(intent);
-                        }
-                    });
+                    adduser();
                 }
             }
         });
@@ -147,7 +161,6 @@ public class signup extends AppCompatActivity {
         });
     }
 
-
     // Method to show Date Picker Dialog
     private void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
@@ -164,5 +177,22 @@ public class signup extends AppCompatActivity {
                     }
                 }, year, month, day);
         datePickerDialog.show();
+    }
+
+    private void adduser() {
+        fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful())
+                {
+                    Toast.makeText(signup.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+                    Intent intent=new Intent(getApplicationContext(),login.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(signup.this, "Error:"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
