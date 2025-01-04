@@ -233,8 +233,9 @@ public class signup extends AppCompatActivity {
     }
 
     private String formatPhoneNumber(String phone) {
-        // Optionally format phone number as needed (e.g., strip spaces, dashes, etc.)
-        return phone.replaceAll("[^\\d]", "");
+        String digits = phone.replaceAll("\\D", "");
+
+        return digits.substring(0, 3) + "-" + digits.substring(3, 6) + "-" + digits.substring(6);
     }
 
     private void linkPhoneCredentialToUser(PhoneAuthCredential credential, FirebaseUser user) {
