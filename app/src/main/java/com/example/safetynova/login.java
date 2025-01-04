@@ -2,6 +2,8 @@ package com.example.safetynova;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.PhoneAuthOptions;
+
+import java.util.concurrent.TimeUnit;
 
 public class login extends AppCompatActivity {
 
@@ -82,10 +90,69 @@ public class login extends AppCompatActivity {
                 {
                     Toast.makeText(login.this, "Password must have 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Show message for invalid credentials
-                    Toast.makeText(login.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                    login(email,password);
                 }
             }
         });
     }
+    private void login(String input, String password) {
+        if (input.contains("@")) {
+            // Email-based login
+            fAuth.signInWithEmailAndPassword(input, password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Login successful with email", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, home.class); // Replace with your actual home activity
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // Phone-based login
+            verifyPhoneNumber(emailPhoneInput.getText().toString().trim());
+        }
+    }
+
+    private void verifyPhoneNumber(String phoneNumber) {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(fAuth)
+                .setPhoneNumber(phoneNumber) // Phone number to authenticate
+                .setTimeout(60L, TimeUnit.SECONDS) // Timeout duration
+                .setActivity(this) // Current activity
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                        // Auto-verification completed, sign in directly
+                        signInWithPhoneAuthCredential(credential);
+                    }
+
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        Toast.makeText(login.this, "Phone verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                        // In this case, since we're not using OTP, this part can remain unused.
+                        // You could log the verification ID if needed.
+                    }
+                })
+                .build();
+
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+                // Method to sign in with PhoneAuthCredential
+                private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+                    fAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Login successful with phone", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this, home.class); // Replace with your actual home activity
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 }

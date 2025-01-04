@@ -81,6 +81,9 @@ public class signup extends AppCompatActivity {
                     Toast.makeText(signup.this, "Password must have 6 characters", Toast.LENGTH_SHORT).show();
                 } else if (!password.equals(confirmPassword)) {
                     Toast.makeText(signup.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                } else if (!phone.matches("[6-9][0-9]{9}")) {
+                    Toast.makeText(signup.this, "Invalid phone number format", Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
                     adduser();
                 }
@@ -194,6 +197,7 @@ public class signup extends AppCompatActivity {
     }
 
     private void verifyPhoneNumber(String phoneNumber, FirebaseUser user) {
+        phoneNumber = formatPhoneNumber(phoneNumber);
         // Add the phone number with the country code
         phoneNumber = "+91" + phoneNumber; // Change country code as needed
 
@@ -210,6 +214,7 @@ public class signup extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(@NonNull FirebaseException e) {
+                        // Log error message for debugging
                         Toast.makeText(signup.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
@@ -218,7 +223,7 @@ public class signup extends AppCompatActivity {
                         // OTP sent successfully, handle user input
                         Intent intent = new Intent(signup.this, VerifyOtpActivity.class);
                         intent.putExtra("verificationId", verificationId);
-                        intent.putExtra("firebaseUser", user);
+                        intent.putExtra("firebaseUser", user.getUid());
                         startActivity(intent);
                     }
                 })
@@ -227,12 +232,22 @@ public class signup extends AppCompatActivity {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
+    private String formatPhoneNumber(String phone) {
+        // Optionally format phone number as needed (e.g., strip spaces, dashes, etc.)
+        return phone.replaceAll("[^\\d]", "");
+    }
+
     private void linkPhoneCredentialToUser(PhoneAuthCredential credential, FirebaseUser user) {
-        user.linkWithCredential(credential).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(this, "Phone number linked to email account", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Error linking phone: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+        user.linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Phone number linked successfully
+                    Toast.makeText(signup.this, "Account created and phone linked!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Error linking phone number
+                    Toast.makeText(signup.this, "Phone number link failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -37,17 +37,30 @@ android {
 }
 
 dependencies {
-
+    // AndroidX and Material components
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Google Play Services for maps and location
     implementation(libs.play.services.maps)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Firebase dependencies
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-auth:21.3.0")
+    implementation("com.google.firebase:firebase-database:20.3.3")
+    implementation("com.google.firebase:firebase-core:21.1.1")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.google.android.gms:play-services-location:21.0.1")
-    implementation ("com.google.android.material:material:1.9.0")
+
+    // Additional debugging tools
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }
