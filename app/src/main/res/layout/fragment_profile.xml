@@ -9,8 +9,6 @@
     tools:context=".Profile">
 
     <!-- Profile Title -->
-
-    <!-- Profile Picture -->
     <TextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"

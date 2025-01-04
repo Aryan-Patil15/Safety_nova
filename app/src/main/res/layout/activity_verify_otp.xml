@@ -6,50 +6,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@drawable/city"
     tools:context=".VerifyOtpActivity">
 
-    <!-- Title or Instruction -->
+    <!-- Page Title -->
+    <TextView
+        android:id="@+id/page_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="serif"
+        android:text="OTP Verification"
+        android:textColor="#e34540"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Instruction -->
+
     <TextView
         android:id="@+id/otp_instruction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Enter the OTP sent to your phone"
-        android:textSize="18sp"
+        android:layout_marginTop="124dp"
+        android:text="Enter the OTP sent to your Phone Number/Email ID"
         android:textAlignment="center"
+        android:textStyle="bold"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/otp_input"
-        android:layout_marginBottom="24dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/page_name" />
 
     <!-- OTP Input Field -->
+
     <EditText
         android:id="@+id/otp_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="80dp"
         android:hint="Enter OTP"
         android:inputType="number"
         android:textAlignment="center"
-        android:layout_marginBottom="16dp"
-        android:textSize="30dp"
-        app:layout_constraintTop_toBottomOf="@id/otp_instruction"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/verify_otp_button"
-        android:layout_marginHorizontal="32dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_instruction" />
 
     <!-- Verify Button -->
+
     <Button
         android:id="@+id/verify_otp_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:background="@drawable/rounded_button"
         android:text="Verify OTP"
-        android:backgroundTint="@color/purple_500"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/otp_input"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginHorizontal="32dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_input"
+        app:layout_constraintVertical_bias="0.266" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
