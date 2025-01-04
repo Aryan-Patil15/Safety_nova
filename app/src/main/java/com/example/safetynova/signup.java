@@ -2,12 +2,9 @@ package com.example.safetynova;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
@@ -19,13 +16,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.text.TextWatcher;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class signup extends AppCompatActivity {
 
@@ -33,13 +34,12 @@ public class signup extends AppCompatActivity {
     private Button signUpButton;
     private TextView loginText;
     boolean isPasswordVisible;
-    String fullName,email,phone,dob,password,confirmPassword;
+    String fullName, email, phone, dob, password, confirmPassword;
     FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_signup);
 
         // Initialize UI components
@@ -54,7 +54,7 @@ public class signup extends AppCompatActivity {
 
         isPasswordVisible = false;
 
-        fAuth= FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();
 
         // Set Date of Birth field click listener
         dobInput.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +77,7 @@ public class signup extends AppCompatActivity {
 
                 if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob.isEmpty()) {
                     Toast.makeText(signup.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                } else if(!(password.length() == 6))
-                {
+                } else if (!(password.length() == 6)) {
                     Toast.makeText(signup.this, "Password must have 6 characters", Toast.LENGTH_SHORT).show();
                 } else if (!password.equals(confirmPassword)) {
                     Toast.makeText(signup.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
@@ -96,6 +95,7 @@ public class signup extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         confirmPasswordInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -180,18 +180,59 @@ public class signup extends AppCompatActivity {
     }
 
     private void adduser() {
-        fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(signup.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(getApplicationContext(),login.class);
-                    startActivity(intent);
+                if (task.isSuccessful()) {
+                    // User created successfully, now verify phone
+                    verifyPhoneNumber(phone, task.getResult().getUser());
+                } else {
+                    Toast.makeText(signup.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Toast.makeText(signup.this, "Error:"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
+            }
+        });
+    }
+
+    private void verifyPhoneNumber(String phoneNumber, FirebaseUser user) {
+        // Add the phone number with the country code
+        phoneNumber = "+91" + phoneNumber; // Change country code as needed
+
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(fAuth)
+                .setPhoneNumber(phoneNumber)  // Complete phone number with country code
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                        // Automatically verify phone and link to email user
+                        linkPhoneCredentialToUser(credential, user);
+                    }
+
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        Toast.makeText(signup.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                        // OTP sent successfully, handle user input
+                        Intent intent = new Intent(signup.this, VerifyOtpActivity.class);
+                        intent.putExtra("verificationId", verificationId);
+                        intent.putExtra("firebaseUser", user);
+                        startActivity(intent);
+                    }
+                })
+                .build();
+
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    private void linkPhoneCredentialToUser(PhoneAuthCredential credential, FirebaseUser user) {
+        user.linkWithCredential(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "Phone number linked to email account", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error linking phone: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

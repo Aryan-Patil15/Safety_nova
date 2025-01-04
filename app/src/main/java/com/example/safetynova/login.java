@@ -10,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class login extends AppCompatActivity {
 
     private EditText emailPhoneInput, passwordInput;
     private Button loginButton;
     private ImageView facebookIcon, googleIcon, linkedinIcon;
     private TextView t;
+
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,8 @@ public class login extends AppCompatActivity {
         googleIcon = findViewById(R.id.google_icon);
         linkedinIcon = findViewById(R.id.linkedin_icon);
         t = findViewById(R.id.signup);
+
+        fAuth= FirebaseAuth.getInstance();
 
         // Set social media icons click behavior
         facebookIcon.setOnClickListener(new View.OnClickListener() {
@@ -67,14 +73,14 @@ public class login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Get text from EditText fields
-                String emailPhone = emailPhoneInput.getText().toString().trim();
+                String email= emailPhoneInput.getText().toString().trim();
                 String password = passwordInput.getText().toString().trim();
 
-                // Check if credentials are correct
-                if (emailPhone.equals("user") && password.equals("1234")) {
-                    // Intent to navigate to home activity
-                    Intent intent = new Intent(login.this, home.class);
-                    startActivity(intent);
+                if ( email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(login.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                } else if(!(password.length() == 6))
+                {
+                    Toast.makeText(login.this, "Password must have 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
                     // Show message for invalid credentials
                     Toast.makeText(login.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
