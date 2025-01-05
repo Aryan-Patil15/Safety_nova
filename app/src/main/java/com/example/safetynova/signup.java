@@ -1,41 +1,53 @@
 package com.example.safetynova;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.text.TextWatcher;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+import android.text.TextWatcher;
+import android.text.Editable;
+
 
 public class signup extends AppCompatActivity {
 
     private EditText emailInput, phoneInput, passwordInput, confirmPasswordInput, dobInput, fullNameInput;
     private Button signUpButton;
+    private ImageView googleSignUpButton;
     private TextView loginText;
-    boolean isPasswordVisible;
-    String fullName, email, phone, dob, password, confirmPassword;
-    FirebaseAuth fAuth;
+    private boolean isPasswordVisible = false;
+    private FirebaseAuth fAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,120 +60,44 @@ public class signup extends AppCompatActivity {
         phoneInput = findViewById(R.id.phone_input);
         passwordInput = findViewById(R.id.password_input);
         confirmPasswordInput = findViewById(R.id.confirm_password_input);
-        dobInput = findViewById(R.id.dob_input);  // Date of Birth Input
+        dobInput = findViewById(R.id.dob_input);
         signUpButton = findViewById(R.id.signup_button);
+        googleSignUpButton = findViewById(R.id.google_icon);
         loginText = findViewById(R.id.login);
-
-        isPasswordVisible = false;
 
         fAuth = FirebaseAuth.getInstance();
 
-        // Set Date of Birth field click listener
-        dobInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
-            }
-        });
+        // Configure Google Sign-In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id)) // Replace with actual Web Client ID
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Set sign-up button click behavior
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fullName = fullNameInput.getText().toString();
-                email = emailInput.getText().toString();
-                phone = phoneInput.getText().toString();
-                dob = dobInput.getText().toString();  // Get date of birth input
-                password = passwordInput.getText().toString();
-                confirmPassword = confirmPasswordInput.getText().toString();
+        // Set listeners for buttons and inputs
+        dobInput.setOnClickListener(v -> showDatePickerDialog());
+        signUpButton.setOnClickListener(v -> validateAndRegister());
+        googleSignUpButton.setOnClickListener(v -> signInWithGoogle());
+        loginText.setOnClickListener(v -> navigateToLogin());
+        passwordInput.setOnTouchListener((v, event) -> togglePasswordVisibility(event));
 
-                if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob.isEmpty()) {
-                    Toast.makeText(signup.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                } else if (!(password.length() == 6)) {
-                    Toast.makeText(signup.this, "Password must have 6 characters", Toast.LENGTH_SHORT).show();
-                } else if (!password.equals(confirmPassword)) {
-                    Toast.makeText(signup.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                } else {
-                    adduser();
-                }
-            }
-        });
-
-        // Navigate to Login activity
-        loginText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(signup.this, login.class);
-                startActivity(intent);
-            }
-        });
-
+        // Confirm password error feedback
         confirmPasswordInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Optional: Implement actions before text is changed
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Dynamically fetch the password value
-                String password = passwordInput.getText().toString();
-                String confirmPassword = confirmPasswordInput.getText().toString();
-
-                // Compare passwords and set error
-                if (!confirmPassword.equals(password)) {
+                if (!confirmPasswordInput.getText().toString().equals(passwordInput.getText().toString())) {
                     confirmPasswordInput.setError("Passwords do not match");
                 } else {
-                    confirmPasswordInput.setError(null); // Clear the error
+                    confirmPasswordInput.setError(null);
                 }
             }
-
             @Override
-            public void afterTextChanged(Editable s) {
-                // Optional: Implement actions after text is changed
-            }
-        });
-
-        passwordInput.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
-                        // Save current padding
-                        int paddingStart = passwordInput.getPaddingStart();
-                        int paddingTop = passwordInput.getPaddingTop();
-                        int paddingEnd = passwordInput.getPaddingEnd();
-                        int paddingBottom = passwordInput.getPaddingBottom();
-
-                        if (isPasswordVisible) {
-                            passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                            passwordInput.post(() -> {
-                                passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
-                            });
-                        } else {
-                            passwordInput.setTransformationMethod(null);
-                            passwordInput.post(() -> {
-                                passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
-                            });
-                        }
-
-                        // Toggle visibility state
-                        isPasswordVisible = !isPasswordVisible;
-
-                        // Reapply padding and stabilize layout
-                        passwordInput.setPadding(paddingStart, paddingTop, paddingEnd, paddingBottom);
-                        passwordInput.setSelection(passwordInput.getText().length());
-                        passwordInput.requestLayout();
-                        passwordInput.invalidate();
-                        return true;
-                    }
-                }
-                return false;
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
-    // Method to show Date Picker Dialog
     private void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -169,42 +105,63 @@ public class signup extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(signup.this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // Set selected date to the dobInput field
-                        dobInput.setText(String.format("%02d/%02d/%d", dayOfMonth, monthOfYear + 1, year));
-                    }
-                }, year, month, day);
+                (view, year1, monthOfYear, dayOfMonth) ->
+                        dobInput.setText(String.format("%02d/%02d/%d", dayOfMonth, monthOfYear + 1, year1)),
+                year, month, day);
         datePickerDialog.show();
     }
 
-    private void adduser() {
-        fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    // User created successfully, now verify phone
-                    verifyPhoneNumber(phone, task.getResult().getUser());
-                } else {
-                    Toast.makeText(signup.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
+    private void validateAndRegister() {
+        String fullName = fullNameInput.getText().toString().trim();
+        String email = emailInput.getText().toString().trim();
+        String phone = phoneInput.getText().toString().trim();
+        String dob = dobInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+        String confirmPassword = confirmPasswordInput.getText().toString().trim();
+
+        if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || dob.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailInput.setError("Enter a valid email");
+            return;
+        }
+
+        if (password.length() < 6) {
+            passwordInput.setError("Password must be at least 6 characters");
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            confirmPasswordInput.setError("Passwords do not match");
+            return;
+        }
+
+        addUser(fullName, email, phone, dob, password);
+    }
+
+    private void addUser(String fullName, String email, String phone, String dob, String password) {
+        fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = task.getResult().getUser();
+                verifyPhoneNumber(phone, user);
+            } else {
+                Toast.makeText(this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void verifyPhoneNumber(String phoneNumber, FirebaseUser user) {
-        // Add the phone number with the country code
-        phoneNumber = "+91" + phoneNumber; // Change country code as needed
-
+        phoneNumber = "+91" + phoneNumber; // Adjust for dynamic country codes
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(fAuth)
-                .setPhoneNumber(phoneNumber)  // Complete phone number with country code
+                .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                        // Automatically verify phone and link to email user
                         linkPhoneCredentialToUser(credential, user);
                     }
 
@@ -215,7 +172,6 @@ public class signup extends AppCompatActivity {
 
                     @Override
                     public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                        // OTP sent successfully, handle user input
                         Intent intent = new Intent(signup.this, VerifyOtpActivity.class);
                         intent.putExtra("verificationId", verificationId);
                         intent.putExtra("firebaseUser", user);
@@ -223,17 +179,73 @@ public class signup extends AppCompatActivity {
                     }
                 })
                 .build();
-
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
     private void linkPhoneCredentialToUser(PhoneAuthCredential credential, FirebaseUser user) {
         user.linkWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(this, "Phone number linked to email account", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Phone number linked successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Error linking phone: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Phone linking failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            firebaseAuthWithGoogle(account);
+                        } catch (ApiException e) {
+                            Toast.makeText(this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+    );
+    private void signInWithGoogle() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        googleSignInLauncher.launch(signInIntent);
+    }
+
+
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        fAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = fAuth.getCurrentUser();
+                Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, signup.class));
+                finish();
+            } else {
+                Toast.makeText(this, "Google Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void navigateToLogin() {
+        startActivity(new Intent(this, login.class));
+    }
+
+    private boolean togglePasswordVisibility(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
+                if (isPasswordVisible) {
+                    passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    passwordInput.setTransformationMethod(null);
+                }
+                isPasswordVisible = !isPasswordVisible;
+                return true;
+            }
+        }
+        return false;
     }
 }
