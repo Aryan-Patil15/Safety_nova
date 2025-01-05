@@ -7,12 +7,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 public class Profile extends Fragment {
 
-    private TextView profileName, userName, userBirthday, userPhone, userTrustedContacts, userEmail, userMedicalInfo;
+    private TextView profileName, userTrustedContacts, userMedicalInfo;
     private ImageView profilePicture;
     private Button editProfileButton;
 
@@ -25,8 +26,7 @@ public class Profile extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -34,34 +34,41 @@ public class Profile extends Fragment {
         profileName = view.findViewById(R.id.profile_name);
         profilePicture = view.findViewById(R.id.profile_picture);
         editProfileButton = view.findViewById(R.id.edit_profile_button);
-
-        // Details section
         userTrustedContacts = view.findViewById(R.id.trusted_contacts);
         userMedicalInfo = view.findViewById(R.id.medical_info);
 
-        // Edit Profile Button functionality
-        editProfileButton.setOnClickListener(v -> {
-            // Implement action for editing the profile
-        });
+        // Set listeners if components are not null
+        if (editProfileButton != null) {
+            editProfileButton.setOnClickListener(v -> {
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Edit profile functionality coming soon!", Toast.LENGTH_SHORT).show();
+                    // Implement edit profile functionality
+                }
+            });
+        }
 
-        // Set up navigation for userMedicalInfo
-        userMedicalInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFragment(new Medical());
-            }
-        });
+        if (userMedicalInfo != null) {
+            userMedicalInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadFragment(new Medical());
+                }
+            });
+        }
 
         return view;
     }
 
-
     private void loadFragment(Fragment fragment) {
-        if (getActivity() != null) {
+        if (getActivity() != null && fragment != null) {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment) // Ensure this ID matches your container in the activity layout
                     .addToBackStack(null) // Optional: Allows the user to navigate back
                     .commit();
+        } else {
+            if (getContext() != null) {
+                Toast.makeText(getContext(), "Unable to load fragment.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
