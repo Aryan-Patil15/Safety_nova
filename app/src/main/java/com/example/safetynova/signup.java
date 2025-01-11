@@ -239,8 +239,10 @@ public class signup extends AppCompatActivity {
             if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
                 if (isPasswordVisible) {
                     passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
                 } else {
                     passwordInput.setTransformationMethod(null);
+                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
                 }
                 isPasswordVisible = !isPasswordVisible;
                 return true;
