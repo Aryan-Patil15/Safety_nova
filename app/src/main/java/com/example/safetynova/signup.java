@@ -134,6 +134,11 @@ public class signup extends AppCompatActivity {
             return;
         }
 
+        if (password.length() > 10) {
+            passwordInput.setError("Password must be less than 10 characters");
+            return;
+        }
+
         if (!password.equals(confirmPassword)) {
             confirmPasswordInput.setError("Passwords do not match");
             return;
@@ -239,10 +244,10 @@ public class signup extends AppCompatActivity {
             if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
                 if (isPasswordVisible) {
                     passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
+                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
                 } else {
                     passwordInput.setTransformationMethod(null);
-                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
+                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
                 }
                 isPasswordVisible = !isPasswordVisible;
                 return true;
