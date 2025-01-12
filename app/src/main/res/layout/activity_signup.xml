@@ -9,9 +9,6 @@
     android:background="@drawable/city">
 
     <!-- App Title -->
-
-    <!-- Welcome Text -->
-
     <TextView
         android:id="@+id/signup_title"
         android:layout_width="wrap_content"
@@ -25,6 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
@@ -106,9 +104,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Password Input -->
-
-    <!-- Confirm Password Input -->
-
     <EditText
         android:id="@+id/password_input"
         android:layout_width="0dp"
@@ -126,6 +121,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dob_input" />
 
+    <!-- Confirm Password Input -->
     <EditText
         android:id="@+id/confirm_password_input"
         android:layout_width="0dp"
@@ -142,15 +138,11 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Sign Up Button -->
-
-    <!-- Social Media Login -->
-
-    <!-- Social Media Icons -->
-
     <Button
         android:id="@+id/signup_button"
         android:layout_width="325dp"
         android:layout_height="55dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:backgroundTint="#e34540"
@@ -158,9 +150,9 @@
         android:text="Sign Up"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_password_input"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/remember_me_checkbox" />
+        tools:layout_editor_absoluteY="525dp" />
 
     <LinearLayout
         android:id="@+id/login_text"
@@ -171,8 +163,8 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_button">
-        <!-- Already have an account? -->
 
+        <!-- Already have an account? -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -188,17 +180,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/remember_me_checkbox"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="0dp"
-        android:text="Remember me"
-        android:textColor="#808080"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirm_password_input" />
-
+    <!-- Social Media Login -->
     <TextView
         android:id="@+id/social_media_text"
         android:layout_width="wrap_content"
@@ -211,6 +193,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_text" />
 
+    <!-- Social Media Icons -->
     <LinearLayout
         android:id="@+id/social_media_icons"
         android:layout_width="0dp"
