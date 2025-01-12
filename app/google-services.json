@@ -13,7 +13,12 @@
           "package_name": "com.example.firebaseconnection"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA50eZPS-0jFNY6Y4aXi3RPWKEnewcndjE"
@@ -21,7 +26,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -32,7 +42,20 @@
           "package_name": "com.example.safetynova"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "193867853435-l7p5b8ghbt5p5b2lreuo5q94ig55vvfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.safetynova",
+            "certificate_hash": "9db83c9453a3cdd66f74e71b510862f8ee79e1ad"
+          }
+        },
+        {
+          "client_id": "193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA50eZPS-0jFNY6Y4aXi3RPWKEnewcndjE"
@@ -40,7 +63,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
