@@ -19,12 +19,15 @@
         android:theme="@style/Theme.SafetyNova"
         tools:targetApi="31">
         <activity
+            android:name=".side_main"
+            android:exported="false"
+            tools:ignore="Instantiatable,MissingClass" />
+        <activity
             android:name=".TrustedContactsSelect"
             android:exported="false" />
         <activity
             android:name=".MedicalForm"
             android:exported="false" />
-
         <activity
             android:name=".Medical"
             android:exported="false" />

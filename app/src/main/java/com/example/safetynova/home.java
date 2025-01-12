@@ -1,5 +1,6 @@
 package com.example.safetynova;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,8 +14,10 @@ import androidx.fragment.app.FragmentTransaction;
 public class home extends AppCompatActivity {
 
     private ImageButton btnhome, btnmap;
+    ImageView side;
     private ImageView btnuser;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +25,18 @@ public class home extends AppCompatActivity {
 
         // Initial fragment load
         loadFragment(new HomeFragment());
-
+        side= findViewById(R.id.side);
         // Find views
         btnmap = findViewById(R.id.nav_maps);
         btnhome = findViewById(R.id.nav_home);
         btnuser = findViewById(R.id.user_icon);
+
+        side.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragmentWithDelay(new sidemain(),1000);
+            }
+        });
 
         // Set click listeners
         btnhome.setOnClickListener(new View.OnClickListener() {

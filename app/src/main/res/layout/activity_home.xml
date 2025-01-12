@@ -5,7 +5,7 @@
     tools:context=".home">
 
     <!-- Toolbar -->
-    <RelativeLayout
+    <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -16,13 +16,14 @@
 
         <!-- Menu Icon -->
         <ImageView
-            android:id="@+id/menu_icon"
+            android:id="@+id/side"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:src="@drawable/baseline_menu_24"
-            android:contentDescription="Menu Icon" />
+            android:contentDescription="Menu Icon"
+            android:layout_gravity="start"/>
 
         <!-- App Name -->
         <TextView
@@ -34,7 +35,8 @@
             android:textColor="#000036"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:gravity="center" />
+            android:gravity="center"
+            android:layout_gravity="center"/>
 
         <!-- User Icon -->
         <ImageView
@@ -45,8 +47,9 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
             android:contentDescription="User Icon"
-            android:src="@drawable/baseline_person_24" />
-    </RelativeLayout>
+            android:src="@drawable/baseline_person_24"
+            android:layout_gravity="end"/>
+    </Toolbar>
 
     <!-- Home Fragment -->
     <FrameLayout

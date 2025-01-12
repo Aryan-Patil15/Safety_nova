@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SafetyNova</string>
+    <string name="open">Open Navigation Drawer</string>
+    <string name="close">Close Navigation Drawer</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="client_id">193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com</string>
     <string name="default_web_client_id">YOUR_WEB_CLIENT_ID_HERE</string>
