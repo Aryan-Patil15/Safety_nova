@@ -227,7 +227,7 @@ public class signup extends AppCompatActivity {
             if (task.isSuccessful()) {
                 FirebaseUser user = fAuth.getCurrentUser();
                 Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, signup.class));
+                startActivity(new Intent(this,MedicalForm.class));
                 finish();
             } else {
                 Toast.makeText(this, "Google Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
