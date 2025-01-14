@@ -62,7 +62,7 @@ public class login extends AppCompatActivity {
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // Replace with your web client ID
+                .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com") // Replace with your web client ID
                 .requestEmail()
                 .build();
 
@@ -120,21 +120,17 @@ public class login extends AppCompatActivity {
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null); // Get the email from Google account
            fAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                if (!task.isSuccessful() && (task.getException() instanceof FirebaseAuthUserCollisionException))
+                {
                         FirebaseUser user = fAuth.getCurrentUser();
                         // Handle collision where the account already exists
                         Toast.makeText(this, "Welcome back " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
                         navigateToHome();
-                    }
-                    else {
-                        fAuth.getCurrentUser().delete();
-                        Toast.makeText(this, "User not found, please register", Toast.LENGTH_SHORT).show();
-                    }
-                    }
-                    else {
-                        // Handle other errors (like network issue or incorrect credentials)
-                        Toast.makeText(this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, " "+task.getException(), Toast.LENGTH_SHORT).show();
+                   fAuth.getCurrentUser().delete();
+                   Toast.makeText(this, "User not found, please register", Toast.LENGTH_SHORT).show();
                     }
             });
     }

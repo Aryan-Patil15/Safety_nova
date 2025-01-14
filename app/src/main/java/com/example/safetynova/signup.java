@@ -69,7 +69,7 @@ public class signup extends AppCompatActivity {
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // Replace with actual Web Client ID
+                .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com") // Replace with actual Web Client ID
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -159,9 +159,9 @@ public class signup extends AppCompatActivity {
     }
 
     private void verifyPhoneNumber(String phoneNumber, FirebaseUser user) {
-        phoneNumber = "+91" + phoneNumber; // Adjust for dynamic country codes
+        String PhoneNumber = "+91" + phoneNumber; // Adjust for dynamic country codes
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(fAuth)
-                .setPhoneNumber(phoneNumber)
+                .setPhoneNumber(PhoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -227,6 +227,7 @@ public class signup extends AppCompatActivity {
             if (task.isSuccessful()) {
                 FirebaseUser user = fAuth.getCurrentUser();
                 Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
+                mGoogleSignInClient.signOut();
                 startActivity(new Intent(this,MedicalForm.class));
                 finish();
             } else {
