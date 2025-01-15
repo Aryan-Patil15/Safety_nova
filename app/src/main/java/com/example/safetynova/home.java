@@ -7,15 +7,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.navigation.NavigationView;
+
 public class home extends AppCompatActivity {
 
     private ImageButton btnhome, btnmap;
-    ImageView side;
-    private ImageView btnuser;
+    private ImageView side, btnuser;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -25,16 +29,22 @@ public class home extends AppCompatActivity {
 
         // Initial fragment load
         loadFragment(new HomeFragment());
-        side= findViewById(R.id.side);
+
         // Find views
+        side = findViewById(R.id.side);
         btnmap = findViewById(R.id.nav_maps);
         btnhome = findViewById(R.id.nav_home);
         btnuser = findViewById(R.id.user_icon);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
 
+        // Menu icon click listener
         side.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragmentWithDelay(new sidemain(),1000);
+                if (!drawerLayout.isDrawerOpen(navigationView)) { // Open drawer if not already open
+                    drawerLayout.openDrawer(navigationView);
+                }
             }
         });
 
