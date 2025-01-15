@@ -172,15 +172,13 @@ public class signup extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(@NonNull FirebaseException e) {
+                        user.delete();
                         Toast.makeText(signup.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                        Intent intent = new Intent(signup.this, VerifyOtpActivity.class);
-                        intent.putExtra("verificationId", verificationId);
-                        intent.putExtra("firebaseUser", user);
-                        startActivity(intent);
+
                     }
                 })
                 .build();
@@ -191,6 +189,7 @@ public class signup extends AppCompatActivity {
         user.linkWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Phone number linked successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,MedicalForm.class));
             } else {
                 Toast.makeText(this, "Phone linking failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
