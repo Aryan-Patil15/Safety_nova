@@ -1,5 +1,7 @@
 package com.example.safetynova;
 
+import static com.google.firebase.auth.AuthKt.getAuth;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,8 +21,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
@@ -110,33 +115,43 @@ public class login extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-                firebaseAuthWithGoogle(account.getIdToken());
+                firebaseAuthWithGoogle(account.getIdToken(),account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null); // Get the email from Google account
-           fAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                if (!task.isSuccessful() && (task.getException() instanceof FirebaseAuthUserCollisionException))
-                {
-                        FirebaseUser user = fAuth.getCurrentUser();
-                        // Handle collision where the account already exists
-                        Toast.makeText(this, "Welcome back " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
-                        navigateToHome();
-                }
-                else {
-                    Toast.makeText(this, " "+task.getException(), Toast.LENGTH_SHORT).show();
-                   fAuth.getCurrentUser().delete();
-                   Toast.makeText(this, "User not found, please register", Toast.LENGTH_SHORT).show();
-                    }
-            });
+    private void firebaseAuthWithGoogle(String idToken,GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        fAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = fAuth.getCurrentUser();
+                            // Check if the user is new
+                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
+                                googleSignInClient.signOut();
+                                user.delete();
+                                // Handle new user (e.g., display welcome message)
+                                Toast.makeText(this, "User Not found, Please Register", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Handle existing user (e.g., directly navigate to main activity)
+                                Toast.makeText(this, "Welcome Back "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                                navigateToHome();
+                            }
+                            // ...
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                            // ...
+                        }
+                });
     }
+
     private void navigateToHome() {
         startActivity(new Intent(this, home.class));
     }
+
     private void login(String input, String password) {
         if (input.contains("@")) {
             // Email-based login
