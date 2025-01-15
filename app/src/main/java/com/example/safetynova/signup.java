@@ -226,7 +226,7 @@ public class signup extends AppCompatActivity {
         fAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = fAuth.getCurrentUser();
-                Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
                 mGoogleSignInClient.signOut();
                 startActivity(new Intent(this,MedicalForm.class));
                 finish();
