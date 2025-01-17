@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,6 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import android.text.TextWatcher;
 import android.text.Editable;
-
 
 public class signup extends AppCompatActivity {
 
@@ -145,6 +145,9 @@ public class signup extends AppCompatActivity {
         }
 
         addUser(fullName, email, phone, dob, password);
+        FrameLayout otp = findViewById(R.id.otp);
+        otp.setVisibility(View.VISIBLE);
+        otp.bringToFront();
     }
 
     private void addUser(String fullName, String email, String phone, String dob, String password) {
