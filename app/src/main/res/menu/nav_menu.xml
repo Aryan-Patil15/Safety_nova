@@ -2,36 +2,31 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn ="navigation_view"
-    tools:context=".nav_menu">
-<item
-    android:title="Menu"
-    >
+    tools:showIn="navigation_view">
 
-</item>
-    <group
-        android:checkableBehavior="single">
+    <item android:title="Menu" />
+
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/ho"
             android:icon="@drawable/baseline_home_24"
-            android:title="Home"/>
+            android:title="Home" />
         <item
             android:id="@+id/in"
             android:icon="@drawable/info"
-            android:title="Info"/>
+            android:title="Info" />
         <item
             android:id="@+id/we"
             android:icon="@drawable/weather"
-            android:title="Weather Updates"/>
+            android:title="Weather Updates" />
     </group>
-    <item
-        android:title=" "
-        >
+
+    <item android:title=" ">
         <menu>
             <item
                 android:id="@+id/lg"
                 android:icon="@drawable/logout"
-                android:title="Logout"/>
+                android:title="Logout" />
         </menu>
     </item>
 

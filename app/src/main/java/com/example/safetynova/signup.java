@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -40,14 +41,17 @@ import android.text.Editable;
 
 public class signup extends AppCompatActivity {
 
-    private EditText emailInput, phoneInput, passwordInput, confirmPasswordInput, dobInput, fullNameInput;
-    private Button signUpButton;
+    private EditText emailInput, phoneInput, passwordInput, confirmPasswordInput, dobInput, fullNameInput,otpInput;
+    private Button signUpButton,verifyOtpButton;
     private ImageView googleSignUpButton;
     private TextView loginText;
     private boolean isPasswordVisible = false;
     private FirebaseAuth fAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
+
+    private String VerificationId;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,9 @@ public class signup extends AppCompatActivity {
         signUpButton = findViewById(R.id.signup_button);
         googleSignUpButton = findViewById(R.id.google_icon);
         loginText = findViewById(R.id.login);
+        // Initialize UI components
+        otpInput = findViewById(R.id.otp_input);
+        verifyOtpButton = findViewById(R.id.verify_otp_button);
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -73,13 +80,13 @@ public class signup extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         // Set listeners for buttons and inputs
         dobInput.setOnClickListener(v -> showDatePickerDialog());
         signUpButton.setOnClickListener(v -> validateAndRegister());
         googleSignUpButton.setOnClickListener(v -> signInWithGoogle());
         loginText.setOnClickListener(v -> navigateToLogin());
         passwordInput.setOnTouchListener((v, event) -> togglePasswordVisibility(event));
+        verifyOtpButton.setOnClickListener(v -> validate());
 
         // Confirm password error feedback
         confirmPasswordInput.addTextChangedListener(new TextWatcher() {
@@ -145,15 +152,12 @@ public class signup extends AppCompatActivity {
         }
 
         addUser(fullName, email, phone, dob, password);
-        FrameLayout otp = findViewById(R.id.otp);
-        otp.setVisibility(View.VISIBLE);
-        otp.bringToFront();
     }
 
     private void addUser(String fullName, String email, String phone, String dob, String password) {
         fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                FirebaseUser user = task.getResult().getUser();
+                user = task.getResult().getUser();
                 verifyPhoneNumber(phone, user);
             } else {
                 Toast.makeText(this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -181,13 +185,50 @@ public class signup extends AppCompatActivity {
 
                     @Override
                     public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-
+                        FrameLayout otp = findViewById(R.id.otp);
+                        otp.setVisibility(View.VISIBLE);
+                        otp.bringToFront();
+                        VerificationId=verificationId;
                     }
                 })
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
+    private void validate() {
+        String otp = otpInput.getText().toString().trim();
+        if (otp.isEmpty()) {
+            Toast.makeText(this, "Please enter the OTP", Toast.LENGTH_SHORT).show();
+        } else {
+            verifyOtp(otp);
+        }
+    }
+
+    private void verifyOtp(String otp) {
+        if (VerificationId != null) {
+            // Create PhoneAuthCredential with the verification ID and OTP
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VerificationId, otp);
+            // Link phone credential to the Firebase user
+            linkPhoneCredentialToUser(credential);
+        } else {
+            Toast.makeText(this, "Verification ID is null", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void linkPhoneCredentialToUser(PhoneAuthCredential credential) {
+        if (user != null) {
+            user.linkWithCredential(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Phone number verified and linked successfully", Toast.LENGTH_SHORT).show();
+                    // Navigate to the home screen or next activity
+                    navigateToLogin();
+                } else {
+                    Toast.makeText(this, "Error linking phone: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Firebase user is null", Toast.LENGTH_SHORT).show();
+        }
+    }
     private void linkPhoneCredentialToUser(PhoneAuthCredential credential, FirebaseUser user) {
         user.linkWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

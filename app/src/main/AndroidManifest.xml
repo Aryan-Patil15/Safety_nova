@@ -37,6 +37,12 @@
             android:name=".home"
             android:exported="false" />
         <activity
+            android:name=".VerifyOtpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nav_menu"
+            android:exported="false" />
+        <activity
             android:name=".signup"
             android:exported="false" />
         <activity
