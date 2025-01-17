@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".TrustedContactsSelect"
-    android:background="@drawable/city">
+    android:background="@drawable/city"
+    android:isScrollContainer="true">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
