@@ -119,6 +119,10 @@ public class home extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new About()) // Ensure About() is valid
                     .commit();
+        }else if (item.getItemId() == R.id.we) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new fragment_weather()) // Ensure About() is valid
+                    .commit();
         } else if (item.getItemId() == R.id.lg) {
             logoutUser();
             return true;
