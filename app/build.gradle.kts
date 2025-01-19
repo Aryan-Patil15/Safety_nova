@@ -37,7 +37,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -57,6 +56,4 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:23.1.0") // Firebase Authentication
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.firebaseui:firebase-ui-firestore:8.0.0")
-
 }
