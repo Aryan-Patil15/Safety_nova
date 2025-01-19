@@ -8,7 +8,8 @@ buildscript {
     dependencies {
         //noinspection GradlePluginVersion
         classpath ("com.android.tools.build:gradle:<your-gradle-version>")// Keep your existing Gradle version
-        classpath ("com.google.gms:google-services:4.4.2") // Add this line for Firebase
+        classpath ("com.google.gms:google-services:4.4.2")
+        classpath ("com.google.gms:google-services:4.3.15")// Add this line for Firebase
     }
 }
 

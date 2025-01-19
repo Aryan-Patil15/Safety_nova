@@ -10,16 +10,25 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class MedicalForm extends AppCompatActivity {
 
     private EditText fullNameInput, ageInput, medicalConditionInput, bloodGroupInput, emergencyContactInput;
     private Spinner genderSpinner;
     private Button submitButton;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medical_form);
+
+        // Initialize Firebase Firestore
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Initialize views
         fullNameInput = findViewById(R.id.full_name_input);
@@ -53,7 +62,7 @@ public class MedicalForm extends AppCompatActivity {
             showToast("Please enter your full name");
             return;
         }
-        if (TextUtils.isEmpty(age) || !isNumeric(age)) {
+        if (TextUtils.isEmpty(age) || !isNumeric(age) || Integer.parseInt(age) <= 0) {
             showToast("Please enter a valid age");
             return;
         }
@@ -66,14 +75,25 @@ public class MedicalForm extends AppCompatActivity {
             return;
         }
 
-        // If validation passes
-        showToast("Form Submitted Successfully!\n" +
-                "Name: " + fullName + "\n" +
-                "Age: " + age + "\n" +
-                "Gender: " + gender + "\n" +
-                "Medical Condition: " + medicalCondition + "\n" +
-                "Blood Group: " + bloodGroup + "\n" +
-                "Emergency Contact: " + emergencyContact);
+        // Submit data to Firebase Firestore
+        submitDataToFirestore(fullName, age, gender, medicalCondition, bloodGroup, emergencyContact);
+    }
+
+    private void submitDataToFirestore(String fullName, String age, String gender, String medicalCondition, String bloodGroup, String emergencyContact) {
+        // Create a map of the data
+        Map<String, Object> data = new HashMap<>();
+        data.put("full_name", fullName);
+        data.put("age", age);
+        data.put("gender", gender);
+        data.put("medical_condition", medicalCondition);
+        data.put("blood_group", bloodGroup);
+        data.put("emergency_contact", emergencyContact);
+
+        // Add data to Firestore
+        firebaseFirestore.collection("medical_forms")
+                .add(data)
+                .addOnSuccessListener(documentReference -> showToast("Form Submitted Successfully!"))
+                .addOnFailureListener(e -> showToast("Failed to submit form: " + e.getMessage()));
     }
 
     private boolean isNumeric(String str) {
@@ -86,7 +106,7 @@ public class MedicalForm extends AppCompatActivity {
     }
 
     private boolean isPhoneNumberValid(String phone) {
-        return phone.length() >= 10 && TextUtils.isDigitsOnly(phone);
+        return phone.length() == 10 && TextUtils.isDigitsOnly(phone);
     }
 
     private void showToast(String message) {
