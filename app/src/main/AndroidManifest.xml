@@ -45,9 +45,6 @@
         <activity
             android:name=".home"
             android:exported="false" />
-        <activity
-            android:name=".MedicalForm"
-            android:exported="true" />
 
         <activity
             android:name=".nav_menu"
