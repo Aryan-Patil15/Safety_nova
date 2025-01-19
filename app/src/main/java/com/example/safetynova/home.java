@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 public class home extends AppCompatActivity {
 
     private ImageButton btnhome, btnmap;
@@ -35,7 +37,7 @@ public class home extends AppCompatActivity {
         btnmap = findViewById(R.id.nav_maps);
         btnhome = findViewById(R.id.nav_home);
         btnuser = findViewById(R.id.user_icon);
-        drawerLayout = findViewById(R.id.signup_layout);
+        drawerLayout = findViewById(R.id.activity_home);
         navigationView = findViewById(R.id.nav_view);
 
         // Menu icon click listener
@@ -94,4 +96,5 @@ public class home extends AppCompatActivity {
             }
         }, delayMillis);
     }
+
 }

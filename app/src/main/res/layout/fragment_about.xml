@@ -1,14 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".About">
+    android:padding="16dp"
+    android:background="@drawable/city">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="About " />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:padding="16dp"
+        android:layout_marginTop="40dp"
+        android:elevation="4dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About SafetyNova"
+            android:textSize="24sp"
+            android:textColor="#35424a"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_mission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Our Mission"
+            android:textSize="20sp"
+            android:textColor="#35424a"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_mission_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="At SafetyNova, our mission is to enhance personal safety through innovative technology, providing a reliable platform for emergencies."
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About the App"
+            android:textSize="20sp"
+            android:textColor="#35424a"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_about_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SafetyNova offers tools for quick emergency services access, location sharing, and safety tips to keep you secure."
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_features"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Why Choose SafetyNova?"
+            android:textSize="20sp"
+            android:textColor="#35424a"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_features_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• Quick access to emergency services.\n• Real-time location sharing.\n• User-friendly interface.\n• Privacy and security commitment."
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Us"
+            android:textSize="20sp"
+            android:textColor="#35424a"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_contact_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="For questions or suggestions, reach out to us. Together, let’s build a safer world."
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>

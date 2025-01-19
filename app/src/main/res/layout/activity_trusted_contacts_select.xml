@@ -5,41 +5,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".TrustedContactsSelect"
     android:background="@drawable/city"
-    android:isScrollContainer="true">
+    tools:context=".TrustedContactsSelect">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Your Trusted Contacts"
         android:textColor="#e34540"
-        android:textSize="27sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center_horizontal" />
+
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Search Contacts..."
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/input_background"
-        android:layout_gravity="center"
-        android:drawableStart="@drawable/baseline_search_24"
-        android:drawablePadding="10dp" />
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp" />
 
     <ListView
         android:id="@+id/contactsListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="16dp"
         android:choiceMode="multipleChoice" />
 
     <Button
         android:id="@+id/selectButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Contacts" />
+        android:text="Select Contacts"
+        android:layout_marginTop="16dp" />
 </LinearLayout>
