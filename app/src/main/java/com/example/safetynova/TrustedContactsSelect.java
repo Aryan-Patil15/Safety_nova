@@ -9,8 +9,10 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -19,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TrustedContactsSelect extends AppCompatActivity {
 
@@ -28,7 +30,8 @@ public class TrustedContactsSelect extends AppCompatActivity {
     private Button selectButton;
     private SimpleCursorAdapter adapter;
     private SparseBooleanArray checkedStates = new SparseBooleanArray();
-    private ArrayList<String> selectedContacts = new ArrayList<>();
+    private HashMap<String, String> selectedContacts = new HashMap<>();
+    private FrameLayout fragmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class TrustedContactsSelect extends AppCompatActivity {
         contactsListView = findViewById(R.id.contactsListView);
         searchEditText = findViewById(R.id.searchEditText);
         selectButton = findViewById(R.id.selectButton);
+        fragmentContainer = findViewById(R.id.fragment_container);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -50,31 +54,32 @@ public class TrustedContactsSelect extends AppCompatActivity {
             selectedContacts.clear();
             Cursor cursor = adapter.getCursor();
             if (cursor != null) {
-                while (cursor.moveToNext()) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
                     @SuppressLint("Range") String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                     boolean isChecked = checkedStates.get(Integer.parseInt(contactId), false);
                     if (isChecked) {
                         @SuppressLint("Range") String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                        selectedContacts.add(contactName);
+                        @SuppressLint("Range") String contactNumber = getContactNumber(contactId);
+                        selectedContacts.put(contactName, contactNumber);
                     }
                 }
             }
 
             if (selectedContacts.isEmpty()) {
-                showAlertDialog("No contacts selected.");
+                showAlertDialog("No contacts selected.", false);
             } else {
                 StringBuilder contactsMessage = new StringBuilder();
-                for (String contact : selectedContacts) {
-                    contactsMessage.append(contact).append("\n");
+                for (HashMap.Entry<String, String> entry : selectedContacts.entrySet()) {
+                    contactsMessage.append(entry.getKey()).append(" (").append(entry.getValue()).append(")\n");
                 }
-                showAlertDialog("Selected Contacts:\n" + contactsMessage);
+                showAlertDialog("Selected Contacts:\n" + contactsMessage, true);
             }
         });
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No action needed
             }
 
             @Override
@@ -134,6 +139,26 @@ public class TrustedContactsSelect extends AppCompatActivity {
         }
     }
 
+    private String getContactNumber(String contactId) {
+        Cursor phonesCursor = getContentResolver().query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                new String[]{contactId},
+                null
+        );
+
+        String contactNumber = "";
+        if (phonesCursor != null) {
+            if (phonesCursor.moveToFirst()) {
+                @SuppressLint("Range") String number = phonesCursor.getString(phonesCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                contactNumber = number;
+            }
+            phonesCursor.close();
+        }
+        return contactNumber;
+    }
+
     private void restoreCheckedStates() {
         Cursor cursor = adapter.getCursor();
         if (cursor != null) {
@@ -147,13 +172,34 @@ public class TrustedContactsSelect extends AppCompatActivity {
         }
     }
 
-    private void showAlertDialog(String message) {
+    private void showAlertDialog(String message, boolean proceedToFragment) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Contacts Selection")
                 .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                    if (proceedToFragment) {
+                        openLiveLocationSharingFragment();
+                    }
+                })
                 .show();
+    }
+
+    private void openLiveLocationSharingFragment() {
+        LiveLocationSharing fragment = new LiveLocationSharing();
+
+        // Pass selectedContacts to the fragment using a Bundle
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("trustedContacts", selectedContacts);
+        fragment.setArguments(bundle);
+
+        // Make the fragment container visible and add the fragment
+        fragmentContainer.setVisibility(View.VISIBLE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -162,7 +208,7 @@ public class TrustedContactsSelect extends AppCompatActivity {
         if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             loadContacts();
         } else {
-            showAlertDialog("Permission to read contacts denied.");
+            showAlertDialog("Permission to read contacts denied.", false);
         }
     }
 }
