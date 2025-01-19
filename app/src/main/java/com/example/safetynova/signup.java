@@ -48,7 +48,6 @@ public class signup extends AppCompatActivity {
     private boolean isPasswordVisible = false;
     private FirebaseAuth fAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 9001;
 
     private String VerificationId;
     FirebaseUser user;
