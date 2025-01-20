@@ -1,5 +1,10 @@
 package com.example.safetynova;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +14,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class HomeFragment extends Fragment {
 
-    private Button button;
+    private Button button, sos;
+    private static final int REQUEST_CALL = 1;
+    private MediaPlayer mediaPlayer = null;
+
 
     @Nullable
     @Override
@@ -28,10 +38,11 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize button safely
+        // Initialize buttons
         button = view.findViewById(R.id.btn_emergency_services_fragment);
+        sos = view.findViewById(R.id.SOS);
 
-        // Handle button click for sharing location
+        // Handle location sharing button click
         View locationButton = view.findViewById(R.id.btn_emergency_location_fragment);
         if (locationButton != null) {
             locationButton.setOnClickListener(v -> {
@@ -47,14 +58,7 @@ public class HomeFragment extends Fragment {
         }
 
         // Handle SOS button click
-        View sosButton = view.findViewById(R.id.SOS);
-        if (sosButton != null) {
-            sosButton.setOnClickListener(v -> {
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), "SOS clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+        sos.setOnClickListener(v -> SOS());
     }
 
     private void loadFragment(Fragment fragment) {
@@ -68,7 +72,61 @@ public class HomeFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null); // Optional: Adds to back stack for navigation
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    private void SOS() {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(getContext(), R.raw.sos_sound); // Replace with your file name
+        }
+
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+            Toast.makeText(getContext(), "SOS sound playing", Toast.LENGTH_SHORT).show();
+        }
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            Toast.makeText(getContext(), "SOS sound finished", Toast.LENGTH_SHORT).show();
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+        });
+
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:7378992909")); // Replace with the desired number
+            startActivity(callIntent);
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CALL) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:7378992909")); // Replace with the desired number
+                startActivity(callIntent);
+            } else {
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
