@@ -143,6 +143,7 @@ public class login extends AppCompatActivity {
 
     private void navigateToHome() {
         startActivity(new Intent(this, home.class));
+        finish();
     }
 
     private void login(String input, String password) {
