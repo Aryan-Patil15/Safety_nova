@@ -20,12 +20,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
 public class HomeFragment extends Fragment {
 
     private Button button, sos;
     private static final int REQUEST_CALL = 1;
     private MediaPlayer mediaPlayer = null;
-
 
     @Nullable
     @Override
@@ -97,7 +98,7 @@ public class HomeFragment extends Fragment {
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:7378992909")); // Replace with the desired number
+            callIntent.setData(Uri.parse("tel:9284764846")); // Replace with the desired number
             startActivity(callIntent);
         } else {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
