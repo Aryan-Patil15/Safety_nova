@@ -62,8 +62,12 @@ public class MedicalForm extends AppCompatActivity {
             showToast("Please enter your full name");
             return;
         }
-        if (TextUtils.isEmpty(age) || !isNumeric(age) || Integer.parseInt(age) <= 0) {
-            showToast("Please enter a valid age");
+        if (TextUtils.isEmpty(age) || !isNumeric(age) || Integer.parseInt(age) <= 0 || Integer.parseInt(age) > 120) {
+            showToast("Please enter a valid age (1-120)");
+            return;
+        }
+        if (TextUtils.isEmpty(gender) || gender.equals("Select Gender")) {
+            showToast("Please select a valid gender");
             return;
         }
         if (TextUtils.isEmpty(bloodGroup)) {
@@ -71,7 +75,7 @@ public class MedicalForm extends AppCompatActivity {
             return;
         }
         if (TextUtils.isEmpty(emergencyContact) || !isPhoneNumberValid(emergencyContact)) {
-            showToast("Please enter a valid emergency contact number");
+            showToast("Please enter a valid 10-digit emergency contact number");
             return;
         }
 
@@ -83,10 +87,10 @@ public class MedicalForm extends AppCompatActivity {
         // Create a map of the data
         Map<String, Object> data = new HashMap<>();
         data.put("full_name", fullName);
-        data.put("age", age);
+        data.put("age", Integer.parseInt(age)); // Store age as an integer
         data.put("gender", gender);
-        data.put("medical_condition", medicalCondition);
-        data.put("blood_group", bloodGroup);
+        data.put("medical_condition", TextUtils.isEmpty(medicalCondition) ? "None" : medicalCondition);
+        data.put("blood_group", bloodGroup.toUpperCase()); // Store blood group in uppercase
         data.put("emergency_contact", emergencyContact);
 
         // Add data to Firestore
