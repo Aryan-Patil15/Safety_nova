@@ -89,7 +89,6 @@ public class HomeFragment extends Fragment {
         }
 
         mediaPlayer.setOnCompletionListener(mp -> {
-            Toast.makeText(getContext(), "SOS sound finished", Toast.LENGTH_SHORT).show();
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
                 mediaPlayer.release();
@@ -105,7 +104,7 @@ public class HomeFragment extends Fragment {
             } else {
                 ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
             }
-        }, 3000);
+        }, 2000);
     }
 
     @Override
