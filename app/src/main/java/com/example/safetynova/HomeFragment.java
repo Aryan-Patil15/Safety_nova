@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,13 +97,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:9284764846")); // Replace with the desired number
-            startActivity(callIntent);
-        } else {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
-        }
+        new Handler().postDelayed(() -> {
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:9284764846")); // Replace with the desired number
+                startActivity(callIntent);
+            } else {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
+            }
+        }, 3000);
     }
 
     @Override
@@ -112,7 +115,7 @@ public class HomeFragment extends Fragment {
         if (requestCode == REQUEST_CALL) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:7378992909")); // Replace with the desired number
+                callIntent.setData(Uri.parse("tel:9284764846")); // Replace with the desired number
                 startActivity(callIntent);
             } else {
                 if (getContext() != null) {
