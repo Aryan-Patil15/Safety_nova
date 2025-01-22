@@ -2,6 +2,7 @@ package com.example.safetynova;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,13 +10,10 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -38,7 +36,6 @@ public class TrustedContactsSelect extends AppCompatActivity {
     private SimpleCursorAdapter adapter;
     private SparseBooleanArray checkedStates = new SparseBooleanArray();
     private HashMap<String, String> selectedContacts = new HashMap<>();
-    private FrameLayout fragmentContainer;
     private FirebaseFirestore firebaseFirestore;
 
     @Override
@@ -52,7 +49,6 @@ public class TrustedContactsSelect extends AppCompatActivity {
         contactsListView = findViewById(R.id.contactsListView);
         searchEditText = findViewById(R.id.searchEditText);
         selectButton = findViewById(R.id.selectButton);
-        fragmentContainer = findViewById(R.id.fragment_container);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -62,30 +58,11 @@ public class TrustedContactsSelect extends AppCompatActivity {
         }
 
         selectButton.setOnClickListener(view -> {
-            selectedContacts.clear();
-            Cursor cursor = adapter.getCursor();
-            if (cursor != null) {
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    cursor.moveToPosition(i);
-                    @SuppressLint("Range") String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    boolean isChecked = checkedStates.get(Integer.parseInt(contactId), false);
-                    if (isChecked) {
-                        @SuppressLint("Range") String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                        @SuppressLint("Range") String contactNumber = getContactNumber(contactId);
-                        selectedContacts.put(contactName, contactNumber);
-                    }
-                }
-                // Submit data to Firebase Firestore
-                submitDataToFirestore();
-            }
+            collectSelectedContacts();
             if (selectedContacts.isEmpty()) {
-                showAlertDialog("No contacts selected.", false);
+                showAlertDialog("No contacts selected.");
             } else {
-                StringBuilder contactsMessage = new StringBuilder();
-                for (HashMap.Entry<String, String> entry : selectedContacts.entrySet()) {
-                    contactsMessage.append(entry.getKey()).append(" (").append(entry.getValue()).append(")\n");
-                }
-                showAlertDialog("Selected Contacts:\n" + contactsMessage, false);
+                showSelectedContactsAlert();
             }
         });
 
@@ -151,6 +128,23 @@ public class TrustedContactsSelect extends AppCompatActivity {
         }
     }
 
+    private void collectSelectedContacts() {
+        selectedContacts.clear();
+        Cursor cursor = adapter.getCursor();
+        if (cursor != null) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                @SuppressLint("Range") String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                boolean isChecked = checkedStates.get(Integer.parseInt(contactId), false);
+                if (isChecked) {
+                    @SuppressLint("Range") String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    @SuppressLint("Range") String contactNumber = getContactNumber(contactId);
+                    selectedContacts.put(contactName, contactNumber);
+                }
+            }
+        }
+    }
+
     private String getContactNumber(String contactId) {
         Cursor phonesCursor = getContentResolver().query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -184,6 +178,20 @@ public class TrustedContactsSelect extends AppCompatActivity {
         }
     }
 
+    private void showSelectedContactsAlert() {
+        StringBuilder message = new StringBuilder("Selected Contacts:\n\n");
+        for (String name : selectedContacts.keySet()) {
+            message.append(name).append(" - ").append(selectedContacts.get(name)).append("\n");
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Selection")
+                .setMessage(message.toString())
+                .setPositiveButton("OK", (dialog, which) -> submitDataToFirestore())
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
     private void submitDataToFirestore() {
         List<String> contactNumbers = new ArrayList<>(selectedContacts.values());
         String uniqueUserId = UUID.randomUUID().toString();
@@ -193,20 +201,22 @@ public class TrustedContactsSelect extends AppCompatActivity {
                 .document(uniqueUserId)
                 .set(new HashMap<String, Object>() {{
                     put("TrustedContacts", contactNumbers);
-                }}, SetOptions.merge()) // Merge to retain existing fields
-                .addOnSuccessListener(aVoid -> showAlertDialog("Trusted contacts saved successfully.", false))
-                .addOnFailureListener(e -> showAlertDialog("Failed to save trusted contacts: " + e.getMessage(), false));
+                }}, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> navigateToHome())
+                .addOnFailureListener(e -> showAlertDialog("Failed to save trusted contacts: " + e.getMessage()));
     }
 
+    private void navigateToHome() {
+        Intent intent = new Intent(this, home.class);
+        startActivity(intent);
+        finish(); // Close the current activity
+    }
 
-    private void showAlertDialog(String message, boolean proceedToFragment) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Contacts Selection")
+    private void showAlertDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Contacts Selection")
                 .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> {
-                    dialog.dismiss();
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                })
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -216,7 +226,7 @@ public class TrustedContactsSelect extends AppCompatActivity {
         if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             loadContacts();
         } else {
-            showAlertDialog("Permission to read contacts denied.", false);
+            showAlertDialog("Permission to read contacts denied.");
         }
     }
 }

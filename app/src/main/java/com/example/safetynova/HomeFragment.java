@@ -25,7 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
 public class HomeFragment extends Fragment {
 
-    private Button button, sos;
+    private Button button, sos, LiveLocationBtn;
     private static final int REQUEST_CALL = 1;
     private MediaPlayer mediaPlayer = null;
 
@@ -43,16 +43,13 @@ public class HomeFragment extends Fragment {
         // Initialize buttons
         button = view.findViewById(R.id.btn_emergency_services_fragment);
         sos = view.findViewById(R.id.SOS);
+        LiveLocationBtn = view.findViewById(R.id.btn_liveLocation);
 
         // Handle location sharing button click
-        View locationButton = view.findViewById(R.id.btn_emergency_location_fragment);
-        if (locationButton != null) {
-            locationButton.setOnClickListener(v -> {
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), "Live Location Shared", Toast.LENGTH_SHORT).show();
-                }
-            });
+        if (LiveLocationBtn != null) {
+            LiveLocationBtn.setOnClickListener(v -> loadFragment(new LiveLocationSharing()));
         }
+
 
         // Handle button click for emergency services
         if (button != null) {
