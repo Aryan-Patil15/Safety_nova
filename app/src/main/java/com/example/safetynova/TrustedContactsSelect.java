@@ -15,13 +15,20 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class TrustedContactsSelect extends AppCompatActivity {
 
@@ -32,11 +39,15 @@ public class TrustedContactsSelect extends AppCompatActivity {
     private SparseBooleanArray checkedStates = new SparseBooleanArray();
     private HashMap<String, String> selectedContacts = new HashMap<>();
     private FrameLayout fragmentContainer;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trusted_contacts_select);
+
+        // Initialize Firebase Firestore
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         contactsListView = findViewById(R.id.contactsListView);
         searchEditText = findViewById(R.id.searchEditText);
@@ -64,8 +75,9 @@ public class TrustedContactsSelect extends AppCompatActivity {
                         selectedContacts.put(contactName, contactNumber);
                     }
                 }
+                // Submit data to Firebase Firestore
+                submitDataToFirestore();
             }
-
             if (selectedContacts.isEmpty()) {
                 showAlertDialog("No contacts selected.", false);
             } else {
@@ -73,7 +85,7 @@ public class TrustedContactsSelect extends AppCompatActivity {
                 for (HashMap.Entry<String, String> entry : selectedContacts.entrySet()) {
                     contactsMessage.append(entry.getKey()).append(" (").append(entry.getValue()).append(")\n");
                 }
-                showAlertDialog("Selected Contacts:\n" + contactsMessage, true);
+                showAlertDialog("Selected Contacts:\n" + contactsMessage, false);
             }
         });
 
@@ -172,34 +184,30 @@ public class TrustedContactsSelect extends AppCompatActivity {
         }
     }
 
+    private void submitDataToFirestore() {
+        List<String> contactNumbers = new ArrayList<>(selectedContacts.values());
+        String uniqueUserId = UUID.randomUUID().toString();
+
+        // Update the TrustedContacts field in the Profile collection
+        firebaseFirestore.collection("TrustedContacts")
+                .document(uniqueUserId)
+                .set(new HashMap<String, Object>() {{
+                    put("TrustedContacts", contactNumbers);
+                }}, SetOptions.merge()) // Merge to retain existing fields
+                .addOnSuccessListener(aVoid -> showAlertDialog("Trusted contacts saved successfully.", false))
+                .addOnFailureListener(e -> showAlertDialog("Failed to save trusted contacts: " + e.getMessage(), false));
+    }
+
+
     private void showAlertDialog(String message, boolean proceedToFragment) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Contacts Selection")
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
-                    if (proceedToFragment) {
-                        openLiveLocationSharingFragment();
-                    }
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 })
                 .show();
-    }
-
-    private void openLiveLocationSharingFragment() {
-        LiveLocationSharing fragment = new LiveLocationSharing();
-
-        // Pass selectedContacts to the fragment using a Bundle
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("trustedContacts", selectedContacts);
-        fragment.setArguments(bundle);
-
-        // Make the fragment container visible and add the fragment
-        fragmentContainer.setVisibility(View.VISIBLE);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.safetynova;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -96,10 +97,15 @@ public class MedicalForm extends AppCompatActivity {
         // Add data to Firestore
         firebaseFirestore.collection("medical_forms")
                 .add(data)
-                .addOnSuccessListener(documentReference -> showToast("Form Submitted Successfully!"))
+                .addOnSuccessListener(documentReference -> {
+                    showToast("Form Submitted Successfully!");
+                    navigateToLogin();
+                })
                 .addOnFailureListener(e -> showToast("Failed to submit form: " + e.getMessage()));
     }
-
+    private void navigateToLogin() {
+        startActivity(new Intent(this, TrustedContactsSelect.class));
+    }
     private boolean isNumeric(String str) {
         try {
             Integer.parseInt(str);
