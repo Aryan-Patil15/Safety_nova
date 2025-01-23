@@ -13,4 +13,15 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
+
+    <string-array name="Blood_Group">
+        <item>A+</item>
+        <item>B+</item>
+        <item>AB+</item>
+        <item>O+</item>
+        <item>A-</item>
+        <item>B-</item>
+        <item>O-</item>
+        <item>AB-</item>
+    </string-array>
 </resources>
