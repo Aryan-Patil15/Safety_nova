@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -37,12 +39,16 @@ public class TrustedContactsSelect extends AppCompatActivity {
     private SparseBooleanArray checkedStates = new SparseBooleanArray();
     private HashMap<String, String> selectedContacts = new HashMap<>();
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth fAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trusted_contacts_select);
 
+        fAuth = FirebaseAuth.getInstance();
+        user = fAuth.getCurrentUser();
         // Initialize Firebase Firestore
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -194,20 +200,24 @@ public class TrustedContactsSelect extends AppCompatActivity {
 
     private void submitDataToFirestore() {
         List<String> contactNumbers = new ArrayList<>(selectedContacts.values());
-        String uniqueUserId = UUID.randomUUID().toString();
 
         // Update the TrustedContacts field in the Profile collection
-        firebaseFirestore.collection("TrustedContacts")
-                .document(uniqueUserId)
+        firebaseFirestore.collection("User")
+                .document(user.getUid())
                 .set(new HashMap<String, Object>() {{
                     put("TrustedContacts", contactNumbers);
                 }}, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> navigateToHome())
+                .addOnSuccessListener(aVoid -> navigateTologin())
                 .addOnFailureListener(e -> showAlertDialog("Failed to save trusted contacts: " + e.getMessage()));
     }
 
     private void navigateToHome() {
         Intent intent = new Intent(this, home.class);
+        startActivity(intent);
+        finish(); // Close the current activity
+    }
+    private void navigateTologin() {
+        Intent intent = new Intent(this, login.class);
         startActivity(intent);
         finish(); // Close the current activity
     }

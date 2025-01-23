@@ -7,6 +7,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,10 +37,17 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import android.text.TextWatcher;
 import android.text.Editable;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class signup extends AppCompatActivity {
 
@@ -48,8 +58,8 @@ public class signup extends AppCompatActivity {
     private boolean isPasswordVisible = false;
     private FirebaseAuth fAuth;
     private GoogleSignInClient mGoogleSignInClient;
-
-    private String VerificationId;
+    private FirebaseFirestore firebaseFirestore;
+    private String VerificationId,fullName,email,phone,dob,password,confirmPassword;
     FirebaseUser user;
 
     @Override
@@ -72,6 +82,7 @@ public class signup extends AppCompatActivity {
         verifyOtpButton = findViewById(R.id.verify_otp_button);
 
         fAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -118,12 +129,12 @@ public class signup extends AppCompatActivity {
     }
 
     private void validateAndRegister() {
-        String fullName = fullNameInput.getText().toString().trim();
-        String email = emailInput.getText().toString().trim();
-        String phone = phoneInput.getText().toString().trim();
-        String dob = dobInput.getText().toString().trim();
-        String password = passwordInput.getText().toString().trim();
-        String confirmPassword = confirmPasswordInput.getText().toString().trim();
+        fullName = fullNameInput.getText().toString().trim();
+        email = emailInput.getText().toString().trim();
+        phone = phoneInput.getText().toString().trim();
+        dob = dobInput.getText().toString().trim();
+        password = passwordInput.getText().toString().trim();
+        confirmPassword = confirmPasswordInput.getText().toString().trim();
 
         if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || dob.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
@@ -157,14 +168,14 @@ public class signup extends AppCompatActivity {
         fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 user = task.getResult().getUser();
-                verifyPhoneNumber(phone, user);
+                verifyPhoneNumber(phone);
             } else {
                 Toast.makeText(this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void verifyPhoneNumber(String phoneNumber, FirebaseUser user) {
+    private void verifyPhoneNumber(String phoneNumber) {
         String PhoneNumber = "+91" + phoneNumber; // Adjust for dynamic country codes
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(fAuth)
                 .setPhoneNumber(PhoneNumber)
@@ -173,7 +184,7 @@ public class signup extends AppCompatActivity {
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                        linkPhoneCredentialToUser(credential, user);
+                        linkPhoneCredentialToUser(credential);
                     }
 
                     @Override
@@ -217,9 +228,7 @@ public class signup extends AppCompatActivity {
         if (user != null) {
             user.linkWithCredential(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Toast.makeText(this, "Phone number verified and linked successfully", Toast.LENGTH_SHORT).show();
-                    // Navigate to the home screen or next activity
-                    navigateToLogin();
+                    submitDataToFirestore(fullName,email,phone,dob);
                 } else {
                     Toast.makeText(this, "Error linking phone: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -227,16 +236,6 @@ public class signup extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Firebase user is null", Toast.LENGTH_SHORT).show();
         }
-    }
-    private void linkPhoneCredentialToUser(PhoneAuthCredential credential, FirebaseUser user) {
-        user.linkWithCredential(credential).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(this, "Phone number linked successfully", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this,MedicalForm.class));
-            } else {
-                Toast.makeText(this, "Phone linking failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
@@ -267,7 +266,7 @@ public class signup extends AppCompatActivity {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         fAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
-                FirebaseUser user = fAuth.getCurrentUser();
+                user = fAuth.getCurrentUser();
                     Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
                 mGoogleSignInClient.signOut();
                 startActivity(new Intent(this,MedicalForm.class));
@@ -280,6 +279,9 @@ public class signup extends AppCompatActivity {
 
     private void navigateToLogin() {
         startActivity(new Intent(this, login.class));
+    }
+    private void navigateTomedical() {
+        startActivity(new Intent(this, MedicalForm.class));
     }
 
     private boolean togglePasswordVisibility(MotionEvent event) {
@@ -297,5 +299,26 @@ public class signup extends AppCompatActivity {
             }
         }
         return false;
+    }
+    private void submitDataToFirestore(String fullName, String email, String phone, String dob) {
+        // Create a map of the data
+        Map<String, Object> data = new HashMap<>();
+        data.put("full_name", fullName);
+        data.put("email",email); // Store age as an integer
+        data.put("phone",phone);
+        data.put("dob", dob);
+
+        // Add data to Firestore
+        firebaseFirestore.collection("User")
+                .document(user.getUid())
+                .set(data)
+                .addOnSuccessListener(aVoid -> showToast("Data submitted successfully"))
+                .addOnFailureListener(e -> showToast("Error submitting data: " + e.getMessage()));
+        Toast.makeText(this, "Phone number verified and linked successfully", Toast.LENGTH_SHORT).show();
+        // Navigate to the home screen or next activity
+        navigateTomedical();
+    }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

@@ -11,7 +11,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,8 @@ public class MedicalForm extends AppCompatActivity {
     private Spinner genderSpinner,bloodGroupInput;
     private Button submitButton;
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth fAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +44,8 @@ public class MedicalForm extends AppCompatActivity {
         emergencyContactInput = findViewById(R.id.emergency_contact_input);
         genderSpinner = findViewById(R.id.gender_spinner);
         submitButton = findViewById(R.id.submit_button);
-
+        fAuth = FirebaseAuth.getInstance();
+        user = fAuth.getCurrentUser();
         // Set submit button click listener
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,17 +92,18 @@ public class MedicalForm extends AppCompatActivity {
 
     private void submitDataToFirestore(String fullName, String age, String gender, String medicalCondition, String bloodGroup, String emergencyContact) {
         // Create a map of the data
-        Map<String, Object> data = new HashMap<>();
-        data.put("full_name", fullName);
-        data.put("age", Integer.parseInt(age)); // Store age as an integer
-        data.put("gender", gender);
-        data.put("medical_condition", TextUtils.isEmpty(medicalCondition) ? "None" : medicalCondition);
-        data.put("blood_group", bloodGroup.toUpperCase()); // Store blood group in uppercase
-        data.put("emergency_contact", emergencyContact);
+        Map<String, Object> Medical_Form = new HashMap<>();
+        Medical_Form.put("full_name", fullName);
+        Medical_Form.put("age", Integer.parseInt(age)); // Store age as an integer
+        Medical_Form.put("gender", gender);
+        Medical_Form.put("medical_condition", TextUtils.isEmpty(medicalCondition) ? "None" : medicalCondition);
+        Medical_Form.put("blood_group", bloodGroup.toUpperCase()); // Store blood group in uppercase
+        Medical_Form.put("emergency_contact", emergencyContact);
 
         // Add data to Firestore
-        firebaseFirestore.collection("medical_forms")
-                .add(data)
+        firebaseFirestore.collection("User")
+                .document(user.getUid())
+                .set(Medical_Form, SetOptions.merge())
                 .addOnSuccessListener(documentReference -> {
                     showToast("Form Submitted Successfully!");
                     navigateToLogin();
