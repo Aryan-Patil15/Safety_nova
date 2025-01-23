@@ -18,8 +18,8 @@ import java.util.Map;
 
 public class MedicalForm extends AppCompatActivity {
 
-    private EditText fullNameInput, ageInput, medicalConditionInput, bloodGroupInput, emergencyContactInput;
-    private Spinner genderSpinner;
+    private EditText fullNameInput, ageInput, medicalConditionInput, emergencyContactInput;
+    private Spinner genderSpinner,bloodGroupInput;
     private Button submitButton;
     private FirebaseFirestore firebaseFirestore;
 
@@ -55,7 +55,7 @@ public class MedicalForm extends AppCompatActivity {
         String age = ageInput.getText().toString().trim();
         String gender = genderSpinner.getSelectedItem() != null ? genderSpinner.getSelectedItem().toString() : "";
         String medicalCondition = medicalConditionInput.getText().toString().trim();
-        String bloodGroup = bloodGroupInput.getText().toString().trim();
+        String bloodGroup = bloodGroupInput.getSelectedItem() != null ? bloodGroupInput.getSelectedItem().toString() : "";
         String emergencyContact = emergencyContactInput.getText().toString().trim();
 
         // Validate inputs
