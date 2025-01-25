@@ -3,6 +3,7 @@ package com.example.safetynova;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -25,7 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class home extends AppCompatActivity {
 
-    private ImageButton btnhome, btnmap;
+    private ImageButton btnhome, btnmap,btnmsg;
     private ImageView side, btnuser;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -51,6 +52,7 @@ public class home extends AppCompatActivity {
         // Find views
         side = findViewById(R.id.side);
         btnmap = findViewById(R.id.nav_maps);
+        btnmsg=findViewById(R.id.nav_messages);
         btnhome = findViewById(R.id.nav_home);
         btnuser = findViewById(R.id.user_icon);
         drawerLayout = findViewById(R.id.activity_home);
@@ -88,6 +90,13 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadFragmentWithDelay(new Profile(),1000);  // Load Profile fragment when clicked
+            }
+        });
+
+        btnmsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragmentWithDelay(new message(),1000);  // Load Profile fragment when clicked
             }
         });
 
