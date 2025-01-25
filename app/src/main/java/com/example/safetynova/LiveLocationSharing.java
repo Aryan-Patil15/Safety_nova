@@ -176,15 +176,17 @@ public class LiveLocationSharing extends Fragment {
         DocumentReference documentReference = firebaseFirestore.collection("User").document(currentUserId);
         documentReference.set(locationData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    String locationLink = "https://maps.google.com/?q=" + geoPoint.getLatitude() + "," + geoPoint.getLongitude();
-                    shareLocationWithContacts(locationLink);
+                    // Generate dynamic link after saving location
+                    String dynamicLink = "https://example.com/track?userId=" + currentUserId;
+                    shareDynamicLinkWithContacts(dynamicLink);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "Failed to save location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void shareLocationWithContacts(String locationLink) {
+
+    private void shareDynamicLinkWithContacts(String dynamicLink) {
         if (trustedContacts.isEmpty()) {
             Toast.makeText(requireContext(), "No trusted contacts to share location.", Toast.LENGTH_SHORT).show();
             return;
@@ -194,20 +196,16 @@ public class LiveLocationSharing extends Fragment {
         for (HashMap.Entry<String, String> entry : trustedContacts.entrySet()) {
             String name = entry.getKey();
             String phoneNumber = entry.getValue();
-            String message = "Hi " + name + ", I am continuously sharing my real-time location: " + locationLink;
-
-            Intent intent = new Intent("SMS_SENT");
-            PendingIntent sentPI = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            String message = "Hi " + name + ", track my live location using this link: " + dynamicLink;
 
             try {
-                smsManager.sendTextMessage(phoneNumber, null, message, sentPI, null);
+                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
             } catch (Exception e) {
                 Toast.makeText(requireContext(), "Failed to send SMS: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                return;
             }
         }
 
-        Toast.makeText(requireContext(), "Location sent to trusted contacts.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Dynamic link sent to trusted contacts.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
