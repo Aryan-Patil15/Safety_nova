@@ -31,11 +31,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class LiveLocationSharing extends Fragment {
 
@@ -45,7 +45,7 @@ public class LiveLocationSharing extends Fragment {
     private HashMap<String, String> trustedContacts = new HashMap<>();
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private static final int SMS_PERMISSION_REQUEST_CODE = 1002;
-    private String currentLocationLink;
+    private GeoPoint currentGeoPoint;
     private SmsReceiver smsReceiver;
     private FirebaseFirestore firebaseFirestore;
 
@@ -55,11 +55,6 @@ public class LiveLocationSharing extends Fragment {
 
         // Initialize Firestore
         firebaseFirestore = FirebaseFirestore.getInstance();
-
-        // Retrieve trusted contacts from the arguments
-        if (getArguments() != null) {
-            trustedContacts = (HashMap<String, String>) getArguments().getSerializable("trustedContacts");
-        }
 
         // Register the SMS receiver to listen for SMS sent results
         smsReceiver = new SmsReceiver();
@@ -87,43 +82,54 @@ public class LiveLocationSharing extends Fragment {
         }
 
         sendLocationButton.setOnClickListener(v -> {
-            if (currentLocationLink != null) {
-                // Save location to Firestore and share
-                saveLocationToFirestore(currentLocationLink);
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                // Request SMS permission
+                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_REQUEST_CODE);
             } else {
-                Toast.makeText(requireContext(), "Fetching location... Please wait.", Toast.LENGTH_SHORT).show();
+                // Proceed to share location if permission is granted
+                shareLocationIfAvailable();
             }
         });
 
         return view;
     }
 
+    private void shareLocationIfAvailable() {
+        if (currentGeoPoint != null) {
+            saveLocationToFirestore(currentGeoPoint);
+        } else {
+            Toast.makeText(requireContext(), "Fetching location... Please wait.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void displayContacts() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        // Access the 'User' collection and get the document for the current user
         firestore.collection("User").document(currentUserId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            // Retrieve the TrustedContacts and TrustedNames fields
-                            List<String> trustedContacts = (List<String>) document.get("TrustedContacts");
-                            List<String> trustedNames = (List<String>) document.get("TrustedNames");
+                            List<String> trustedContactsList = (List<String>) document.get("TrustedContacts");
+                            List<String> trustedNamesList = (List<String>) document.get("TrustedNames");
 
-                            if (trustedContacts == null || trustedNames == null || trustedContacts.isEmpty() || trustedNames.isEmpty()) {
+                            if (trustedContactsList == null || trustedNamesList == null || trustedContactsList.isEmpty() || trustedNamesList.isEmpty()) {
                                 contactListTextView.setText("No trusted contacts available.");
                                 return;
                             }
 
-                            // Build the contact list string
+                            trustedContacts.clear();
+                            for (int i = 0; i < trustedNamesList.size() && i < trustedContactsList.size(); i++) {
+                                trustedContacts.put(trustedNamesList.get(i), trustedContactsList.get(i));
+                            }
+
                             StringBuilder contactList = new StringBuilder("Trusted Contacts:\n");
-                            for (int i = 0; i < trustedNames.size() && i < trustedContacts.size(); i++) {
-                                contactList.append(trustedNames.get(i))
+                            for (int i = 0; i < trustedNamesList.size() && i < trustedContactsList.size(); i++) {
+                                contactList.append(trustedNamesList.get(i))
                                         .append(" - ")
-                                        .append(trustedContacts.get(i))
+                                        .append(trustedContactsList.get(i))
                                         .append("\n");
                             }
 
@@ -140,12 +146,11 @@ public class LiveLocationSharing extends Fragment {
                 });
     }
 
-
     private void startLocationTracking() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);  // 5 seconds interval
-        locationRequest.setFastestInterval(2000); // 2 seconds fastest interval
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
 
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
@@ -154,7 +159,7 @@ public class LiveLocationSharing extends Fragment {
                     if (locationResult != null && !locationResult.getLocations().isEmpty()) {
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-                            currentLocationLink = "https://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
+                            currentGeoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                         }
                     }
                 }
@@ -162,17 +167,16 @@ public class LiveLocationSharing extends Fragment {
         }
     }
 
-    private void saveLocationToFirestore(String locationLink) {
-        // Generate a unique document ID
-        String uniqueDocumentId = UUID.randomUUID().toString();
+    private void saveLocationToFirestore(GeoPoint geoPoint) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         HashMap<String, Object> locationData = new HashMap<>();
-        locationData.put("LiveLocation", locationLink);
+        locationData.put("LiveLocation", geoPoint);
 
-        DocumentReference documentReference = firebaseFirestore.collection("Profile").document(uniqueDocumentId);
+        DocumentReference documentReference = firebaseFirestore.collection("User").document(currentUserId);
         documentReference.set(locationData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    // Share location with contacts after saving
+                    String locationLink = "https://maps.google.com/?q=" + geoPoint.getLatitude() + "," + geoPoint.getLongitude();
                     shareLocationWithContacts(locationLink);
                 })
                 .addOnFailureListener(e -> {
@@ -192,7 +196,6 @@ public class LiveLocationSharing extends Fragment {
             String phoneNumber = entry.getValue();
             String message = "Hi " + name + ", I am continuously sharing my real-time location: " + locationLink;
 
-            // Create a PendingIntent for SMS delivery confirmation
             Intent intent = new Intent("SMS_SENT");
             PendingIntent sentPI = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -215,10 +218,7 @@ public class LiveLocationSharing extends Fragment {
             startLocationTracking();
         } else if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Send the location message after the permission is granted
-                if (currentLocationLink != null) {
-                    shareLocationWithContacts(currentLocationLink);
-                }
+                shareLocationIfAvailable();
             } else {
                 Toast.makeText(requireContext(), "SMS permission denied.", Toast.LENGTH_SHORT).show();
             }
@@ -230,16 +230,12 @@ public class LiveLocationSharing extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Unregister the SMS receiver to avoid memory leaks
         requireContext().unregisterReceiver(smsReceiver);
     }
 
-
-    // BroadcastReceiver to handle SMS delivery result
     public class SmsReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Check the result of the SMS sending operation
             switch (getResultCode()) {
                 case android.app.Activity.RESULT_OK:
                     Toast.makeText(context, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
