@@ -200,12 +200,14 @@ public class TrustedContactsSelect extends AppCompatActivity {
 
     private void submitDataToFirestore() {
         List<String> contactNumbers = new ArrayList<>(selectedContacts.values());
+        List<String> contactNames=new ArrayList<>(selectedContacts.keySet());
 
         // Update the TrustedContacts field in the Profile collection
         firebaseFirestore.collection("User")
                 .document(user.getUid())
                 .set(new HashMap<String, Object>() {{
                     put("TrustedContacts", contactNumbers);
+                    put("TrustedNames",contactNames);
                 }}, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> navigateTologin())
                 .addOnFailureListener(e -> showAlertDialog("Failed to save trusted contacts: " + e.getMessage()));

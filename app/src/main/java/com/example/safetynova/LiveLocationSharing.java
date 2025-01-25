@@ -27,11 +27,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class LiveLocationSharing extends Fragment {
@@ -96,16 +99,47 @@ public class LiveLocationSharing extends Fragment {
     }
 
     private void displayContacts() {
-        if (trustedContacts.isEmpty()) {
-            contactListTextView.setText("No trusted contacts available.");
-        } else {
-            StringBuilder contactList = new StringBuilder("Trusted Contacts:\n");
-            for (HashMap.Entry<String, String> entry : trustedContacts.entrySet()) {
-                contactList.append(entry.getKey()).append(" (").append(entry.getValue()).append(")\n");
-            }
-            contactListTextView.setText(contactList.toString());
-        }
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        // Access the 'User' collection and get the document for the current user
+        firestore.collection("User").document(currentUserId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            // Retrieve the TrustedContacts and TrustedNames fields
+                            List<String> trustedContacts = (List<String>) document.get("TrustedContacts");
+                            List<String> trustedNames = (List<String>) document.get("TrustedNames");
+
+                            if (trustedContacts == null || trustedNames == null || trustedContacts.isEmpty() || trustedNames.isEmpty()) {
+                                contactListTextView.setText("No trusted contacts available.");
+                                return;
+                            }
+
+                            // Build the contact list string
+                            StringBuilder contactList = new StringBuilder("Trusted Contacts:\n");
+                            for (int i = 0; i < trustedNames.size() && i < trustedContacts.size(); i++) {
+                                contactList.append(trustedNames.get(i))
+                                        .append(" - ")
+                                        .append(trustedContacts.get(i))
+                                        .append("\n");
+                            }
+
+                            contactListTextView.setText(contactList.toString());
+                        } else {
+                            contactListTextView.setText("No trusted contacts available.");
+                        }
+                    } else {
+                        contactListTextView.setText("Error retrieving contacts.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    contactListTextView.setText("Failed to fetch trusted contacts: " + e.getMessage());
+                });
     }
+
 
     private void startLocationTracking() {
         LocationRequest locationRequest = LocationRequest.create();
