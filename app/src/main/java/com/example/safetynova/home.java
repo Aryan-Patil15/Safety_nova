@@ -87,7 +87,7 @@ public class home extends AppCompatActivity {
         btnuser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new Profile());
+                loadFragmentWithDelay(new Profile(),1000);  // Load Profile fragment when clicked
             }
         });
 
@@ -151,6 +151,5 @@ public class home extends AppCompatActivity {
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-
     }
 }
