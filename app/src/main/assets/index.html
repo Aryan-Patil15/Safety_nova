@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafetyNova</title>
+</head>
+<body>
+  <h1>Welcome to SafetyNova</h1>
+  
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyATLMdTgM_aNtrLAPtDM0LVsgGdh1LkJTI",
+      authDomain: "safetynova-27b76.firebaseapp.com",
+      databaseURL: "https://safetynova-27b76-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "safetynova-27b76",
+      storageBucket: "safetynova-27b76.firebasestorage.app",
+      messagingSenderId: "193867853435",
+      appId: "1:193867853435:web:839f6d53ad11789c1ffcde",
+      measurementId: "G-WG1EPFB97E"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Initialize Firestore and Realtime Database
+    const db = getFirestore(app);
+    const realtimeDb = getDatabase(app);
+
+    console.log("Firebase initialized successfully.");
+
+    // Example function to save location to Firestore
+    async function saveLocationToFirestore(latitude, longitude) {
+      try {
+        const docRef = await addDoc(collection(db, "locations"), {
+          latitude: latitude,
+          longitude: longitude,
+          timestamp: new Date().toISOString()
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+
+    // Example function to save location to Realtime Database
+    function saveLocationToRealtimeDB(latitude, longitude) {
+      const locationRef = ref(realtimeDb, 'locations/' + Date.now());
+      set(locationRef, {
+        latitude: latitude,
+        longitude: longitude,
+        timestamp: new Date().toISOString()
+      })
+      .then(() => {
+        console.log("Location saved to Realtime Database");
+      })
+      .catch((error) => {
+        console.error("Error saving to Realtime Database:", error);
+      });
+    }
+
+    // Call the functions to test (using dummy coordinates)
+    saveLocationToFirestore(40.7128, -74.0060); // Example coordinates for NYC
+    saveLocationToRealtimeDB(40.7128, -74.0060);
+  </script>
+</body>
+</html>
