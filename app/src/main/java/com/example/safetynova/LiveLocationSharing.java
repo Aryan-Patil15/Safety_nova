@@ -177,7 +177,7 @@ public class LiveLocationSharing extends Fragment {
         documentReference.set(locationData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     // Generate dynamic link after saving location
-                    String dynamicLink = "https://example.com/track?userId=" + currentUserId;
+                    String dynamicLink = "https://livelocationsafetynova.netlify.app/?userId=" + currentUserId;
                     shareDynamicLinkWithContacts(dynamicLink);
                 })
                 .addOnFailureListener(e -> {
