@@ -93,12 +93,7 @@ public class home extends AppCompatActivity {
             }
         });
 
-        btnmsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFragmentWithDelay(new message(),1000);  // Load Profile fragment when clicked
-            }
-        });
+
 
         // Set up navigation item selection
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
