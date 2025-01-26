@@ -6,7 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +38,7 @@ public class login extends AppCompatActivity {
 
     private EditText emailPhoneInput, passwordInput;
     private Button loginButton;
+    private boolean isPasswordVisible = false;
     private ImageView facebookIcon, googleIcon, linkedinIcon;
     private TextView t;
 
@@ -55,6 +58,7 @@ public class login extends AppCompatActivity {
         googleIcon = findViewById(R.id.google_icon);
         linkedinIcon = findViewById(R.id.linkedin_icon);
         t = findViewById(R.id.signup);
+        passwordInput.setOnTouchListener((v, event) -> togglePasswordVisibility(event));
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -93,6 +97,22 @@ public class login extends AppCompatActivity {
                 login(email, password);
             }
         });
+    }
+    private boolean togglePasswordVisibility(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
+                if (isPasswordVisible) {
+                    passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible_off, 0);
+                } else {
+                    passwordInput.setTransformationMethod(null);
+                    passwordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visible, 0);
+                }
+                isPasswordVisible = !isPasswordVisible;
+                return true;
+            }
+        }
+        return false;
     }
 
     private void signInWithGoogle() {
