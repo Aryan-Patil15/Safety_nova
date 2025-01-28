@@ -23,7 +23,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
@@ -88,6 +90,10 @@ public class signup extends AppCompatActivity {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com") // Replace with actual Web Client ID
                 .requestEmail()
+                .requestProfile() // Request profile information
+                .requestScopes(new Scope(Scopes.PROFILE)) // Request profile scope
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN)) // Request phone scope (deprecated)
+                .requestScopes(new Scope(Scopes.PLUS_ME))
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         // Set listeners for buttons and inputs
@@ -260,8 +266,6 @@ public class signup extends AppCompatActivity {
         googleSignInLauncher.launch(signInIntent);
     }
 
-
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         fAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
@@ -269,8 +273,8 @@ public class signup extends AppCompatActivity {
                 user = fAuth.getCurrentUser();
                     Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
                 mGoogleSignInClient.signOut();
-                startActivity(new Intent(this,MedicalForm.class));
-                finish();
+                phone=String.valueOf(user.getPhoneNumber());
+                submitDataToFirestore(user.getDisplayName(),user.getEmail(),phone,"N/A");
             } else {
                 Toast.makeText(this, "Google Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -308,10 +312,14 @@ public class signup extends AppCompatActivity {
         data.put("phone",phone);
         data.put("dob", dob);
 
+        // Wrapping Medical_Form inside another map to nest it properly
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("User_data", data);
+
         // Add data to Firestore
         firebaseFirestore.collection("User")
                 .document(user.getUid())
-                .set(data)
+                .set(userData)
                 .addOnSuccessListener(aVoid -> showToast("Data submitted successfully"))
                 .addOnFailureListener(e -> showToast("Error submitting data: " + e.getMessage()));
         Toast.makeText(this, "Phone number verified and linked successfully", Toast.LENGTH_SHORT).show();

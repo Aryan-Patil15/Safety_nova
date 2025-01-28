@@ -100,10 +100,14 @@ public class MedicalForm extends AppCompatActivity {
         Medical_Form.put("blood_group", bloodGroup.toUpperCase()); // Store blood group in uppercase
         Medical_Form.put("emergency_contact", emergencyContact);
 
+        // Wrapping Medical_Form inside another map to nest it properly
+        Map<String, Object> userMedicalData = new HashMap<>();
+        userMedicalData.put("Medical_Form", Medical_Form);
+
         // Add data to Firestore
         firebaseFirestore.collection("User")
                 .document(user.getUid())
-                .set(Medical_Form, SetOptions.merge())
+                .set(userMedicalData, SetOptions.merge())
                 .addOnSuccessListener(documentReference -> {
                     showToast("Form Submitted Successfully!");
                     navigateToLogin();
