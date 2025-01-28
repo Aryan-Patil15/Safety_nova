@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class MedicalForm extends AppCompatActivity {
 
-    private EditText fullNameInput, ageInput, medicalConditionInput, emergencyContactInput;
+    private EditText fullNameInput, ageInput, medicalConditionInput, emergencyContactInput,allergiesInput;
     private Spinner genderSpinner,bloodGroupInput;
     private Button submitButton;
     private FirebaseFirestore firebaseFirestore;
@@ -40,6 +40,7 @@ public class MedicalForm extends AppCompatActivity {
         fullNameInput = findViewById(R.id.full_name_input);
         ageInput = findViewById(R.id.age_input);
         medicalConditionInput = findViewById(R.id.medical_condition_input);
+        allergiesInput=findViewById(R.id.allergies_input);
         bloodGroupInput = findViewById(R.id.blood_group_input);
         emergencyContactInput = findViewById(R.id.emergency_contact_input);
         genderSpinner = findViewById(R.id.gender_spinner);
@@ -61,6 +62,7 @@ public class MedicalForm extends AppCompatActivity {
         String age = ageInput.getText().toString().trim();
         String gender = genderSpinner.getSelectedItem() != null ? genderSpinner.getSelectedItem().toString() : "";
         String medicalCondition = medicalConditionInput.getText().toString().trim();
+        String allergies = allergiesInput.getText().toString().trim();
         String bloodGroup = bloodGroupInput.getSelectedItem() != null ? bloodGroupInput.getSelectedItem().toString() : "";
         String emergencyContact = emergencyContactInput.getText().toString().trim();
 
@@ -87,16 +89,17 @@ public class MedicalForm extends AppCompatActivity {
         }
 
         // Submit data to Firebase Firestore
-        submitDataToFirestore(fullName, age, gender, medicalCondition, bloodGroup, emergencyContact);
+        submitDataToFirestore(fullName, age, gender, medicalCondition,allergies, bloodGroup, emergencyContact);
     }
 
-    private void submitDataToFirestore(String fullName, String age, String gender, String medicalCondition, String bloodGroup, String emergencyContact) {
+    private void submitDataToFirestore(String fullName, String age, String gender, String medicalCondition,String allergies, String bloodGroup, String emergencyContact) {
         // Create a map of the data
         Map<String, Object> Medical_Form = new HashMap<>();
         Medical_Form.put("full_name", fullName);
         Medical_Form.put("age", Integer.parseInt(age)); // Store age as an integer
         Medical_Form.put("gender", gender);
         Medical_Form.put("medical_condition", TextUtils.isEmpty(medicalCondition) ? "None" : medicalCondition);
+        Medical_Form.put("allergies", TextUtils.isEmpty(allergies) ? "None" : allergies);
         Medical_Form.put("blood_group", bloodGroup.toUpperCase()); // Store blood group in uppercase
         Medical_Form.put("emergency_contact", emergencyContact);
 
