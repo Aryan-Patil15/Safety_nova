@@ -312,10 +312,14 @@ public class signup extends AppCompatActivity {
         data.put("phone",phone);
         data.put("dob", dob);
 
+        // Wrapping Medical_Form inside another map to nest it properly
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("User_data", data);
+
         // Add data to Firestore
         firebaseFirestore.collection("User")
                 .document(user.getUid())
-                .set(data)
+                .set(userData)
                 .addOnSuccessListener(aVoid -> showToast("Data submitted successfully"))
                 .addOnFailureListener(e -> showToast("Error submitting data: " + e.getMessage()));
         Toast.makeText(this, "Phone number verified and linked successfully", Toast.LENGTH_SHORT).show();
