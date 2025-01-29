@@ -34,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -185,7 +186,6 @@ public class LiveLocationSharing extends Fragment {
                 });
     }
 
-
     private void shareDynamicLinkWithContacts(String dynamicLink) {
         if (trustedContacts.isEmpty()) {
             Toast.makeText(requireContext(), "No trusted contacts to share location.", Toast.LENGTH_SHORT).show();
@@ -193,15 +193,18 @@ public class LiveLocationSharing extends Fragment {
         }
 
         SmsManager smsManager = SmsManager.getDefault();
+
         for (HashMap.Entry<String, String> entry : trustedContacts.entrySet()) {
             String name = entry.getKey();
             String phoneNumber = entry.getValue();
             String message = "Hi " + name + ", track my live location using this link: " + dynamicLink;
 
             try {
-                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                // Send SMS in multiple parts to handle long messages
+                ArrayList<String> messageParts = smsManager.divideMessage(message);
+                smsManager.sendMultipartTextMessage(phoneNumber, null, messageParts, null, null);
             } catch (Exception e) {
-                Toast.makeText(requireContext(), "Failed to send SMS: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Failed to send SMS to " + phoneNumber + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
 
