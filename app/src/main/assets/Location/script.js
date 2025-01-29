@@ -1,3 +1,4 @@
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyATLMdTgM_aNtrLAPtDM0LVsgGdh1LkJTI",
     authDomain: "safetynova-27b76.firebaseapp.com",
@@ -7,8 +8,11 @@ const firebaseConfig = {
     appId: "1:193867853435:web:839f6d53ad11789c1ffcde"
 };
 
+// Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
+
+// Get userId from URL
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('userId');
 
@@ -17,10 +21,12 @@ if (!userId) {
     throw new Error("User ID is required.");
 }
 
+// Global variables
 let map, marker, path = [];
 
+// Initialize Google Map
 function initMap() {
-    const defaultLocation = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco
+    const defaultLocation = { lat: 37.7749, lng: -122.4194 }; // Default to San Francisco
     map = new google.maps.Map(document.getElementById('map'), {
         center: defaultLocation,
         zoom: 15,
@@ -41,6 +47,7 @@ function initMap() {
     });
     polyline.setMap(map);
 
+    // Firestore document reference
     const docRef = db.collection('User').doc(userId);
     docRef.onSnapshot((doc) => {
         if (doc.exists) {
@@ -53,7 +60,7 @@ function initMap() {
                 path.push(userLocation);
                 polyline.setPath(path);
             } else {
-                console.error("Invalid location data");
+                console.error("Invalid location data.");
             }
         } else {
             console.error("No such document!");

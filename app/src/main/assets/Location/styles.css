@@ -11,14 +11,15 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    background: url('./images/city.png') no-repeat center center fixed;
+    background-size: cover;
     color: #333;
 }
 
+
 /* Header Styling */
 header {
-    background: #4a90e2;
-    color: white;
+    color: #e34540;
     padding: 1rem;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
