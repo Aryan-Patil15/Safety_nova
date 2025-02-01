@@ -43,12 +43,6 @@ public class Medical extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         fAuth=FirebaseAuth.getInstance();
 
-
-        if (!isInternetAvailable(requireContext())) {
-            Toast.makeText(requireContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
-            return view;
-        }
-
         medical_info();
 
         return view;
@@ -84,6 +78,8 @@ public class Medical extends Fragment {
                         } else {
                             Toast.makeText(requireContext(), "Medical Form not found.", Toast.LENGTH_SHORT).show();
                         }
+                    } else if (!isInternetAvailable(requireContext())) {
+                        Toast.makeText(requireContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(requireContext(), "User profile not found.", Toast.LENGTH_SHORT).show();
                     }
