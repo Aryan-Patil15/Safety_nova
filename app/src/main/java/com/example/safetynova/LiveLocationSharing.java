@@ -30,7 +30,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -130,8 +129,10 @@ public class LiveLocationSharing extends Fragment {
                     contactListTextView.setText("Failed to fetch trusted contacts: " + e.getMessage());
                 });
     }
+
     private void startLocationTracking() {
-        LocationRequest locationRequest = new LocationRequest.Builder(5000)
+        // Set the interval to 2000ms (2 seconds) for more frequent updates within the 2-5 seconds range.
+        LocationRequest locationRequest = new LocationRequest.Builder(2000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .build();
 
@@ -141,6 +142,8 @@ public class LiveLocationSharing extends Fragment {
                 if (locationResult.getLastLocation() != null) {
                     Location location = locationResult.getLastLocation();
                     currentGeoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    // Continuously update Firestore with the new location.
+                    updateLocationToFirestore(currentGeoPoint);
                 }
             }
         };
@@ -169,6 +172,10 @@ public class LiveLocationSharing extends Fragment {
         }
     }
 
+    /**
+     * This method is triggered by the button click and updates Firestore
+     * then shares the dynamic link with trusted contacts.
+     */
     private void saveLocationToFirestore(GeoPoint geoPoint) {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         HashMap<String, Object> locationData = new HashMap<>();
@@ -177,6 +184,21 @@ public class LiveLocationSharing extends Fragment {
                 .set(locationData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> shareDynamicLinkWithContacts("https://livelocationsafetynova.netlify.app/?userId=" + currentUserId))
                 .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to save location: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * This helper method continuously updates Firestore with the new location,
+     * without sending SMS dynamic links every time.
+     */
+    private void updateLocationToFirestore(GeoPoint geoPoint) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        HashMap<String, Object> locationData = new HashMap<>();
+        locationData.put("LiveLocation", geoPoint);
+        firebaseFirestore.collection("User").document(currentUserId)
+                .set(locationData, SetOptions.merge())
+                .addOnFailureListener(e -> {
+                    // Optional: Handle the failure (for example, log the error).
+                });
     }
 
     private void shareDynamicLinkWithContacts(String dynamicLink) {
