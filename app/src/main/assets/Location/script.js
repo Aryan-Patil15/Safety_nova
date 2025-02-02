@@ -51,9 +51,13 @@ function initMap() {
 
   // Firestore document reference
   const docRef = db.collection('User').doc(userId);
+  let timerStarted = false; // ensures the timer is started only once
   unsubscribeSnapshot = docRef.onSnapshot((doc) => {
     if (doc.exists) {
-      const location = doc.data().LiveLocation;
+      const data = doc.data();
+
+      // Update location if available
+      const location = data.LiveLocation;
       if (location && typeof location.latitude === 'number' && typeof location.longitude === 'number') {
         const userLocation = { lat: location.latitude, lng: location.longitude };
         map.setCenter(userLocation);
@@ -64,16 +68,28 @@ function initMap() {
       } else {
         console.error("Invalid location data.");
       }
+
+      // Start the 2-hour timer only when trackingStartTime is set (i.e. when SMS is sent)
+      if (!timerStarted && data.trackingStartTime) {
+        timerStarted = true;
+        let trackingStartTime;
+        // Check if trackingStartTime is a Firestore Timestamp object
+        if (data.trackingStartTime.toMillis) {
+          trackingStartTime = data.trackingStartTime.toMillis();
+        } else {
+          trackingStartTime = new Date(data.trackingStartTime).getTime();
+        }
+        const elapsed = Date.now() - trackingStartTime;
+        const remaining = trackingDurationMs - elapsed;
+        startTrackingTimer(remaining > 0 ? remaining : 0);
+      }
     } else {
       console.error("No such document!");
     }
   });
-
-  // Start timer countdown
-  startTrackingTimer(trackingDurationMs);
 }
 
-// Function to start the 2-hour countdown timer
+// Function to start the countdown timer with a given duration (in ms)
 function startTrackingTimer(duration) {
   const timerDisplay = document.getElementById('timer');
   let remainingTime = duration;
@@ -90,19 +106,10 @@ function startTrackingTimer(duration) {
 
     if (remainingTime <= 0) {
       clearInterval(timerInterval);
+      timerDisplay.textContent = "Tracking expired.";
+      alert("Tracking period has ended.");
     }
   }, 1000);
-
-  // Stop tracking after the specified duration (2 hours)
-  setTimeout(() => {
-    // Unsubscribe the onSnapshot listener to stop location updates
-    if (unsubscribeSnapshot) {
-      unsubscribeSnapshot();
-      unsubscribeSnapshot = null;
-    }
-    timerDisplay.textContent = "Tracking expired.";
-    alert("Tracking period has ended.");
-  }, duration);
 }
 
 // Helper function to pad time values with leading zeros
