@@ -5,7 +5,8 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="client_id">193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com</string>
     <string name="default_web_client_id">193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com</string>
-
+    <string name="facebook_app_id">1234</string>
+    <string name="facebook_client_token">56789</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="gender_options">

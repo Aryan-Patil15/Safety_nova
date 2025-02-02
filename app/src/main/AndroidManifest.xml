@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
 
     <application
         android:allowBackup="true"
@@ -28,6 +29,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SafetyNova"
         tools:targetApi="31">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
         <activity
             android:name=".Forgetpass"
             android:exported="false" />

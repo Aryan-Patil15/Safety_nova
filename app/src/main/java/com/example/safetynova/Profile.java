@@ -44,7 +44,6 @@ public class Profile extends Fragment {
         trustedContactsTextView = view.findViewById(R.id.trusted_contacts);
         emailTextView = view.findViewById(R.id.email);
         medicalInfoTextView = view.findViewById(R.id.medical_info);
-        ageTextView = view.findViewById(R.id.age);
 
         medicalInfoTextView.setOnClickListener(v -> {
             Fragment fragment = new Medical();
@@ -113,16 +112,14 @@ public class Profile extends Fragment {
 
                         if (userD != null && medicalForm !=null) {
                             String fullName = (String) userD.get("full_name");
-                            String birthday = (String) userD.get("Birthday");
-                            String phone = (String) userD.get("Phone");
+                            String birthday = (String) userD.get("dob");
+                            String phone = (String) userD.get("phone");
                             String email = user.getEmail();
-                            Long age = (Long) medicalForm.get("age");
 
                             profileNameTextView.setText(fullName != null ? fullName : "N/A");
                             birthdayTextView.setText(birthday != null ? birthday : "N/A");
                             phoneTextView.setText(phone != null ? phone : "N/A");
                             emailTextView.setText(email != null ? email : "N/A");
-                            ageTextView.setText(age != null ? String.valueOf(age) : "N/A");
                         } else {
                             Toast.makeText(requireContext(), "User data or Medical Form not found.", Toast.LENGTH_SHORT).show();
                         }
