@@ -40,7 +40,7 @@ public class login extends AppCompatActivity {
     private Button loginButton;
     private boolean isPasswordVisible = false;
     private ImageView facebookIcon, googleIcon, linkedinIcon;
-    private TextView t;
+    private TextView t, forgetpassword;
 
     private FirebaseAuth fAuth;
     private GoogleSignInClient googleSignInClient;
@@ -58,6 +58,7 @@ public class login extends AppCompatActivity {
         googleIcon = findViewById(R.id.google_icon);
         linkedinIcon = findViewById(R.id.linkedin_icon);
         t = findViewById(R.id.signup);
+        forgetpassword = findViewById(R.id.forgetpassword);
         passwordInput.setOnTouchListener((v, event) -> togglePasswordVisibility(event));
 
         fAuth = FirebaseAuth.getInstance();
@@ -83,9 +84,14 @@ public class login extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Forget password redirection
+        forgetpassword.setOnClickListener(v -> {
+            Intent intent = new Intent(login.this, Forgetpass.class);
+            startActivity(intent);
+        });
+
         // Set login button behavior
         loginButton.setOnClickListener(view -> {
-            // Get text from EditText fields
             String email = emailPhoneInput.getText().toString().trim();
             String password = passwordInput.getText().toString().trim();
 
@@ -98,6 +104,7 @@ public class login extends AppCompatActivity {
             }
         });
     }
+
     private boolean togglePasswordVisibility(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (event.getRawX() >= (passwordInput.getRight() - passwordInput.getCompoundDrawables()[2].getBounds().width())) {
@@ -128,37 +135,30 @@ public class login extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-                firebaseAuthWithGoogle(account.getIdToken(),account);
+                firebaseAuthWithGoogle(account.getIdToken(), account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken,GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(String idToken, GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         fAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = fAuth.getCurrentUser();
-                            // Check if the user is new
-                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
-                                googleSignInClient.signOut();
-                                user.delete();
-                                // Handle new user (e.g., display welcome message)
-                                Toast.makeText(this, "User Not found, Please Register", Toast.LENGTH_SHORT).show();
-                            } else {
-                                // Handle existing user (e.g., directly navigate to main activity)
-                                Toast.makeText(this, "Welcome Back "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                                navigateToHome();
-                            }
-                            // ...
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
-                            // ...
-                        }
-                });
+            if (task.isSuccessful()) {
+                FirebaseUser user = fAuth.getCurrentUser();
+                if (task.getResult().getAdditionalUserInfo().isNewUser()) {
+                    googleSignInClient.signOut();
+                    user.delete();
+                    Toast.makeText(this, "User Not found, Please Register", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Welcome Back " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    navigateToHome();
+                }
+            } else {
+                Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void navigateToHome() {
@@ -168,11 +168,10 @@ public class login extends AppCompatActivity {
 
     private void login(String input, String password) {
         if (input.contains("@")) {
-            // Email-based login
             fAuth.signInWithEmailAndPassword(input, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Login successful with email", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, home.class); // Replace with your actual home activity
+                    Intent intent = new Intent(this, home.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -180,7 +179,6 @@ public class login extends AppCompatActivity {
                 }
             });
         } else {
-            // Phone-based login
             verifyPhoneNumber(emailPhoneInput.getText().toString().trim());
         }
     }
@@ -210,7 +208,7 @@ public class login extends AppCompatActivity {
         fAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Login successful with phone", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, home.class); // Replace with your actual home activity
+                Intent intent = new Intent(this, home.class);
                 startActivity(intent);
                 finish();
             } else {
