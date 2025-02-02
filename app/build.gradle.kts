@@ -56,4 +56,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:23.1.0") // Firebase Authentication
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
 }
