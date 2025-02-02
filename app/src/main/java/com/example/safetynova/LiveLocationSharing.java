@@ -30,11 +30,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,9 +130,13 @@ public class LiveLocationSharing extends Fragment {
                     contactListTextView.setText("Failed to fetch trusted contacts: " + e.getMessage());
                 });
     }
+
     private void startLocationTracking() {
-        LocationRequest locationRequest = new LocationRequest.Builder(5000)
+        // Create a LocationRequest with updates every 2 seconds and a maximum delay of 5 seconds.
+        LocationRequest locationRequest = new LocationRequest.Builder(2000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setMinUpdateIntervalMillis(2000)
+                .setMaxUpdateDelayMillis(5000)
                 .build();
 
         locationCallback = new LocationCallback() {
@@ -141,6 +145,8 @@ public class LiveLocationSharing extends Fragment {
                 if (locationResult.getLastLocation() != null) {
                     Location location = locationResult.getLastLocation();
                     currentGeoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    // Continuously update Firestore with the new location.
+                    updateLocationToFirestore(currentGeoPoint);
                 }
             }
         };
@@ -169,6 +175,10 @@ public class LiveLocationSharing extends Fragment {
         }
     }
 
+    /**
+     * This method is triggered by the button click and updates Firestore
+     * then shares the dynamic link with trusted contacts.
+     */
     private void saveLocationToFirestore(GeoPoint geoPoint) {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         HashMap<String, Object> locationData = new HashMap<>();
@@ -177,6 +187,21 @@ public class LiveLocationSharing extends Fragment {
                 .set(locationData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> shareDynamicLinkWithContacts("https://livelocationsafetynova.netlify.app/?userId=" + currentUserId))
                 .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to save location: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * This helper method continuously updates Firestore with the new location,
+     * without sending SMS dynamic links every time.
+     */
+    private void updateLocationToFirestore(GeoPoint geoPoint) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        HashMap<String, Object> locationData = new HashMap<>();
+        locationData.put("LiveLocation", geoPoint);
+        firebaseFirestore.collection("User").document(currentUserId)
+                .set(locationData, SetOptions.merge())
+                .addOnFailureListener(e -> {
+                    // Optional: Handle the failure (for example, log the error).
+                });
     }
 
     private void shareDynamicLinkWithContacts(String dynamicLink) {
@@ -190,6 +215,13 @@ public class LiveLocationSharing extends Fragment {
             ArrayList<String> messageParts = smsManager.divideMessage("Hi " + entry.getKey() + ", track my live location: " + dynamicLink);
             smsManager.sendMultipartTextMessage(entry.getValue(), null, messageParts, null, null);
         }
+        // Update Firestore with trackingStartTime so that the timer starts on the web page.
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        HashMap<String, Object> startTimeData = new HashMap<>();
+        startTimeData.put("trackingStartTime", Timestamp.now());
+        firebaseFirestore.collection("User").document(currentUserId)
+                .set(startTimeData, SetOptions.merge());
+
         Toast.makeText(requireContext(), "Dynamic link sent to trusted contacts.", Toast.LENGTH_SHORT).show();
     }
 
