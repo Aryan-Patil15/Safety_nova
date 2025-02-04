@@ -80,6 +80,10 @@ public class login extends AppCompatActivity {
         // Forget password redirection
         forgetpassword.setOnClickListener(v -> startActivity(new Intent(login.this, Forgetpass.class)));
 
+        // Facebook and LinkedIn icon click handling
+        facebookIcon.setOnClickListener(v -> Toast.makeText(login.this, "Coming soon!!", Toast.LENGTH_SHORT).show());
+        linkedinIcon.setOnClickListener(v -> Toast.makeText(login.this, "Coming soon!!", Toast.LENGTH_SHORT).show());
+
         // Login button click handling
         loginButton.setOnClickListener(view -> {
             String email = emailPhoneInput.getText().toString().trim();
@@ -94,6 +98,7 @@ public class login extends AppCompatActivity {
             }
         });
     }
+
 
     private boolean togglePasswordVisibility(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
