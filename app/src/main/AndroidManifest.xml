@@ -31,12 +31,8 @@
         android:theme="@style/Theme.SafetyNova"
         tools:targetApi="31">
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
-            android:name="com.facebook.FacebookContentProvider"
-            android:exported="true" />
-        <activity
-            android:name=".Forgetpass"
-            android:exported="false" />
+        <activity android:name=".ForgetPass" />
+
         <activity
             android:name=".side_main"
             android:exported="false"
@@ -45,11 +41,15 @@
             android:name=".TrustedContactsSelect"
             android:exported="false" />
         <activity
+            android:name=".Forgetpass"
+            android:exported="false" />
+        <activity
             android:name=".MedicalForm"
             android:exported="false" />
         <activity
             android:name=".Medical"
             android:exported="false" />
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
