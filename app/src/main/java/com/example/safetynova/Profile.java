@@ -98,7 +98,7 @@ public class Profile extends Fragment {
         });
 
         editprofilebtn.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), EditProfile.class));
+            startActivity(new Intent(getContext(), EditProfile.class));
         });
 
 

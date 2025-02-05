@@ -48,7 +48,7 @@ public class Medical extends Fragment {
         fAuth=FirebaseAuth.getInstance();
 
         editbtn.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), edit_medical_info.class));
+            startActivity(new Intent(getContext(), edit_medical_info.class));
 
         });
 
