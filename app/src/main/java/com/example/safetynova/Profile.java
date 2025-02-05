@@ -1,9 +1,12 @@
 package com.example.safetynova;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +28,12 @@ public class Profile extends Fragment {
 
     private TextView profileNameTextView, birthdayTextView, phoneTextView, trustedContactsTextView,
             emailTextView, medicalInfoTextView, ageTextView;
+    private Button editprofilebtn;
     private FirebaseFirestore firestore;
     private FirebaseAuth fAuth;
     private FirebaseUser user;
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class Profile extends Fragment {
         trustedContactsTextView = view.findViewById(R.id.trusted_contacts);
         emailTextView = view.findViewById(R.id.email);
         medicalInfoTextView = view.findViewById(R.id.medical_info);
+        editprofilebtn=view.findViewById(R.id.edit_profile_button);
 
         medicalInfoTextView.setOnClickListener(v -> {
             Fragment fragment = new Medical();
@@ -90,6 +96,11 @@ public class Profile extends Fragment {
                 showAlertDialog("User not authenticated.");
             }
         });
+
+        editprofilebtn.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), EditProfile.class));
+        });
+
 
         loadUserProfile();
 

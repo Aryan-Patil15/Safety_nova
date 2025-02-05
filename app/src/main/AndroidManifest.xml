@@ -48,15 +48,15 @@
         <activity
             android:name=".Medical"
             android:exported="false" />
-
+        <activity android:name=".edit_medical_info"
+            android:exported="false"/>
+        <activity android:name=".EditProfile"
+            android:exported="false"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB2Q1OeRlMZQ4h75xFWClPxRCKoA5S65aM" />
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+
                 <meta-data
                     android:name="com.facebook.sdk.ApplicationId"
                     android:value="@string/facebook_app_id" />

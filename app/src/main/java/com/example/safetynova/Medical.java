@@ -1,6 +1,7 @@
 package com.example.safetynova;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import java.util.Map;
 public class Medical extends Fragment {
 
     private TextView fullNameText, bloodGroupText, allergiesText, medicalConditionsText, ageText;
+    private Button editbtn;
     FirebaseFirestore firestore;
     FirebaseAuth fAuth;
     String userId;
@@ -39,9 +42,15 @@ public class Medical extends Fragment {
         allergiesText = view.findViewById(R.id.allergies);
         medicalConditionsText = view.findViewById(R.id.medical_conditions);
         ageText = view.findViewById(R.id.age);
+        editbtn=view.findViewById(R.id.edit_button);
 
         firestore=FirebaseFirestore.getInstance();
         fAuth=FirebaseAuth.getInstance();
+
+        editbtn.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), edit_medical_info.class));
+
+        });
 
         medical_info();
 
