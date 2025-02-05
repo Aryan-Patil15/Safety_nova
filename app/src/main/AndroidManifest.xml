@@ -31,8 +31,6 @@
         android:theme="@style/Theme.SafetyNova"
         tools:targetApi="31">
 
-        <activity android:name=".ForgetPass" />
-
         <activity
             android:name=".side_main"
             android:exported="false"
@@ -58,16 +56,6 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="fbYOUR_FACEBOOK_APP_ID" />
-            </intent-filter>
-        </activity>
                 <meta-data
                     android:name="com.facebook.sdk.ApplicationId"
                     android:value="@string/facebook_app_id" />
