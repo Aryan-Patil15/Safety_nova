@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/f1"
+    android:background="@android:color/white">
+
+    <!-- Buttons for Fake Calls -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible"
+        android:padding="20dp"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:id="@+id/btnMaleCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male Call"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btnFemaleCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female Call"
+            android:backgroundTint="@android:color/holo_purple"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="30dp" />
+    </LinearLayout>
+
+    <!-- Incoming Call UI (Initially Hidden) -->
+    <RelativeLayout
+        android:id="@+id/f2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tvCallerInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Incoming Call"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:background="@android:color/white">
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accept"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:textColor="@android:color/white"
+                android:layout_marginEnd="20dp" />
+
+            <Button
+                android:id="@+id/btnDecline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Decline"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Fake Reply UI (Initially Hidden) -->
+    <RelativeLayout
+        android:id="@+id/f3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/tvFakeReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What to reply..."
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</RelativeLayout>

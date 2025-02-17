@@ -97,9 +97,11 @@ public class home extends AppCompatActivity {
         btnmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(home.this, "Functionality Coming Soon", Toast.LENGTH_SHORT).show();
+                loadFragmentWithDelay(new openmic(),1000);
             }
         });
+
+
 
         // Set up navigation item selection
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
