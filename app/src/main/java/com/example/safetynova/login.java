@@ -65,7 +65,7 @@ public class login extends AppCompatActivity {
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("YOUR_WEB_CLIENT_ID")  // Replace with your web client ID
+                .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com")  // Replace with your web client ID
                 .requestEmail()
                 .build();
 
@@ -132,7 +132,7 @@ public class login extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken(), account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign-in failed", e);
-                Toast.makeText(this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, ""+e.getStatusCode(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -144,8 +144,10 @@ public class login extends AppCompatActivity {
                 FirebaseUser user = fAuth.getCurrentUser();
                 if (task.getResult().getAdditionalUserInfo().isNewUser()) {
                     googleSignInClient.signOut();
-                    if (user != null) user.delete();
-                    Toast.makeText(this, "User not found. Please register.", Toast.LENGTH_SHORT).show();
+                    if (user != null) {
+                        user.delete();
+                        Toast.makeText(this, "User not found. Please register.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(this, "Welcome back " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                     navigateToHome();

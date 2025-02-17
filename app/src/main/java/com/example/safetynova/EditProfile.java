@@ -1,9 +1,11 @@
 package com.example.safetynova;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +15,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfile extends AppCompatActivity {
@@ -25,6 +29,7 @@ public class EditProfile extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private FirebaseAuth fAuth;
     private FirebaseUser user;
+    DocumentReference docref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,8 @@ public class EditProfile extends AppCompatActivity {
 
         DOB.setOnClickListener(v -> showDatePickerDialog());
         submit.setOnClickListener(v -> {});
-        firestore.collection("User").document(userId).get()
+        docref=firestore.collection("User").document(userId);
+        docref.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         Map<String, Object> userD = (Map<String, Object>) documentSnapshot.get("User_data");
@@ -61,6 +67,67 @@ public class EditProfile extends AppCompatActivity {
                         }
                     }
                 });
+        submit.setOnClickListener(view -> {
+            String temp1 = fullname;
+            String temp2 = phno;
+            String temp3 = age;
+            String temp4 = dob;
+
+            if (Username.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter a Name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (PhoneNumber.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter a PhoneNumber", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (Age.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter an Age", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (DOB.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter a Date of Birth", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            fullname = Username.getText().toString();
+            phno = PhoneNumber.getText().toString();
+            age = Age.getText().toString();
+            dob = DOB.getText().toString();
+
+            Map<String, Object> updates = new HashMap<>();
+            if (!fullname.equals(temp1)) {
+                updates.put("User_data.full_name", fullname); // Using dot notation
+            }
+            if (!phno.equals(temp2)) {
+                updates.put("User_data.phone", phno);
+            }
+            if (!age.equals(temp3)) {
+                updates.put("Medical_Form.age", age);
+            }
+            if (!dob.equals(temp4)) {
+                updates.put("User_data.dob", dob);
+            }
+
+            if (!updates.isEmpty()) { // Only update if there are changes
+                docref.update(updates)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this, home.class);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(this, "Update Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                        );
+            }
+            else {
+                Intent intent = new Intent(this, home.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
     private void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
