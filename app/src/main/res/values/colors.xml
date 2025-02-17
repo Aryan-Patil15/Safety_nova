@@ -10,4 +10,8 @@
     <color name="grey">#d2d2ce</color>
     <color name="blue">#3498db</color>
     <color name="brown">#6D3506</color>
+
+    <!-- <color name="white">#FFFFFF</color> -->
+
+    <!-- <color name="black">#000000</color> -->
 </resources>

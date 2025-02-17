@@ -1,18 +1,26 @@
 package com.example.safetynova;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 public class openmic extends Fragment {
 
-    private View f1, f2, f3;
-    private Button btnMaleCall, btnFemaleCall, btnAccept, btnDecline;
+    private ConstraintLayout mainLayout;
+    private LinearLayout fakeCallButtonsLayout;
+    private ConstraintLayout incomingCallLayout;
+    private View tvFakeReply;
+    private Button btnMaleCall, btnFemaleCall, btnAccept, btnDecline,btn;
+    private MediaPlayer mediaPlayer = null;
 
     public openmic() {
         super(R.layout.fragment_openmic); // Ensure your XML layout filename matches
@@ -20,40 +28,74 @@ public class openmic extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Initialize Views
-        f1 = view.findViewById(R.id.f1);
-        f2 = view.findViewById(R.id.f2);
-        f3 = view.findViewById(R.id.f3);
+        super.onViewCreated(view, savedInstanceState);// Initialize Views
+        mainLayout = view.findViewById(R.id.mainLayout);
+        fakeCallButtonsLayout = view.findViewById(R.id.fakeCallButtonsLayout);
+        incomingCallLayout = view.findViewById(R.id.incomingCallLayout);
+        tvFakeReply = view.findViewById(R.id.tvFakeReply);
         btnMaleCall = view.findViewById(R.id.btnMaleCall);
         btnFemaleCall = view.findViewById(R.id.btnFemaleCall);
         btnAccept = view.findViewById(R.id.btnAccept);
         btnDecline = view.findViewById(R.id.btnDecline);
 
-        // Show f1 initially
-        showFrame(f1);
+        // Show fakeCallButtonsLayout initially
+        showFrame(fakeCallButtonsLayout);
 
         // Click listeners
-        btnMaleCall.setOnClickListener(v -> showFrame(f2));
-        btnFemaleCall.setOnClickListener(v -> showFrame(f2));
-        btnAccept.setOnClickListener(v -> showFrame(f3));
-        btnDecline.setOnClickListener(v -> showFrame(f1));
+        btnMaleCall.setOnClickListener(v -> {
+            showFrame(incomingCallLayout);
+            btn = btnMaleCall;
+        });
+        btnFemaleCall.setOnClickListener(v -> {
+            showFrame(incomingCallLayout);
+            btn = btnFemaleCall;
+        });
+        btnAccept.setOnClickListener(v -> {
+            showFrame(tvFakeReply);
+            play();
+        });
+        btnDecline.setOnClickListener(v -> showFrame(fakeCallButtonsLayout));
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
     private void showFrame(View frameToShow) {
         // Set visibility for all frames
-        f1.setVisibility(View.GONE);
-        f2.setVisibility(View.GONE);
-        f3.setVisibility(View.GONE);
-
-        // Make the selected frame visible and bring it to front
+        fakeCallButtonsLayout.setVisibility(View.GONE);
+        incomingCallLayout.setVisibility(View.GONE);
+        tvFakeReply.setVisibility(View.GONE);
+        // Make the selected frame visible
         frameToShow.setVisibility(View.VISIBLE);
-        frameToShow.bringToFront();
-        if(frameToShow==f2) {
-            Toast.makeText(getContext(), "Frame shown is f2", Toast.LENGTH_SHORT).show();
+    }
+    private void play()
+    {
+        if (btn == btnMaleCall) {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(getContext(),R.raw.male); // Replace with your file name
+            }
+        } else if (btn == btnFemaleCall) {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(getContext(),R.raw.female); // Replace with your file name
+            }
         }
-        frameToShow.requestLayout();
-        frameToShow.invalidate();
+
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+            Toast.makeText(getContext(), "Fake Call sound playing", Toast.LENGTH_SHORT).show();
+        }
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+        });
     }
 }
