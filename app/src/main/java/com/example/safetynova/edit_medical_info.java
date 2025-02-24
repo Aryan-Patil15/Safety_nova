@@ -55,13 +55,13 @@ public class edit_medical_info extends AppCompatActivity {
                         Map<String, Object> medicalForm = (Map<String, Object>) documentSnapshot.get("Medical_Form");
 
                         if (medicalForm != null) {
-                             gender = (String) medicalForm.get("gender");
-                             blood_grp = (String) medicalForm.get("blood_group");
-                             allergies = (String) medicalForm.get("allergies");
-                             medicalcodn = (String) medicalForm.get("medical_condition");
+                            gender = (String) medicalForm.get("gender");
+                            blood_grp = (String) medicalForm.get("blood_group");
+                            allergies = (String) medicalForm.get("allergies");
+                            medicalcodn = (String) medicalForm.get("medical_condition");
 
-                        medicalcodntextview.setText(medicalcodn!= null ? medicalcodn : "N/A");
-                        allergiestextview.setText(allergies!= null ? allergies : "N/A");
+                            medicalcodntextview.setText(medicalcodn!= null ? medicalcodn : "N/A");
+                            allergiestextview.setText(allergies!= null ? allergies : "N/A");
                             int index = -1; // Default to -1 (not found)
                             // 1. Get the string array from strings.xml
                             genderOptions:
