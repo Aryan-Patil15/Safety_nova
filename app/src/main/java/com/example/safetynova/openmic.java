@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,7 @@ public class openmic extends Fragment {
     private ConstraintLayout mainLayout;
     private LinearLayout fakeCallButtonsLayout;
     private ConstraintLayout incomingCallLayout;
-    private View tvFakeReply;
+    private TextView tvFakeReply;
     private Button btnMaleCall, btnFemaleCall, btnAccept, btnDecline,btn;
     private MediaPlayer mediaPlayer = null;
 
@@ -72,6 +73,16 @@ public class openmic extends Fragment {
         tvFakeReply.setVisibility(View.GONE);
         // Make the selected frame visible
         frameToShow.setVisibility(View.VISIBLE);
+        if(frameToShow==tvFakeReply)
+        {
+            if(btn==btnMaleCall) {
+                tvFakeReply.setText("हाँ पापा, मैं ठीक हूँ। कैब मिल गई है, बस निकल रहा हूँ। आप चिंता मत करो, मैं पहुँचकर कॉल कर दूँगा। Bye!");
+            }
+            else
+            {
+                tvFakeReply.setText("हाँ मम्मी, मैं ठीक हूँ। कैब मिल गई है, बस निकल रहा हूँ। आप चिंता मत करो, मैं पहुँचकर कॉल कर दूँगा। Bye!");
+            }
+        }
     }
     private void play()
     {
