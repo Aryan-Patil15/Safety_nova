@@ -10,78 +10,131 @@
     tools:context=".MedicalForm">
 
     <!-- Form Title -->
+
     <TextView
         android:id="@+id/form_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="72dp"
         android:text="Edit Medical Information"
         android:textColor="#e34540"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Gender Selection -->
+    <TextView
+        android:id="@+id/txtgender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:text="Gender:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/form_title" />
+
     <Spinner
         android:id="@+id/gender_spinner"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="25dp"
-        android:entries="@array/gender_options"
         android:background="@drawable/input_background"
-        app:layout_constraintTop_toBottomOf="@id/form_title"
+        android:entries="@array/gender_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/txtgender" />
 
+
+    <TextView
+        android:id="@+id/txtallergies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:text="Allergies:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gender_spinner" />
     <EditText
         android:id="@+id/allergies_input"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:hint="Allergies"
         android:inputType="textMultiLine"
         android:background="@drawable/input_background"
         android:gravity="top"
         android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/gender_spinner"
+        app:layout_constraintTop_toBottomOf="@id/txtallergies"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Medical Condition Input -->
+    <TextView
+        android:id="@+id/txtmedicalcondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:text="Medical Condition:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/allergies_input" />
     <EditText
         android:id="@+id/medical_condition_input"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:hint="Medical Condition"
         android:inputType="textMultiLine"
         android:background="@drawable/input_background"
         android:gravity="top"
         android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/allergies_input"
+        app:layout_constraintTop_toBottomOf="@id/txtmedicalcondition"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Blood Group Input -->
+    <TextView
+        android:id="@+id/txtbloodgrp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:text="Blood Group:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/medical_condition_input" />
     <Spinner
         android:id="@+id/blood_group_input"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:entries="@array/Blood_Group"
         android:background="@drawable/input_background"
         android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/medical_condition_input"
+        app:layout_constraintTop_toBottomOf="@id/txtbloodgrp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
