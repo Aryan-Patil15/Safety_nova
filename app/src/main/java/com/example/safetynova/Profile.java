@@ -151,12 +151,18 @@ public class Profile extends Fragment {
                 .show();
     }
 
+    private void gototrustedcontacts()
+    {
+        Intent i = new Intent(getContext(), TrustedContactsSelect.class);
+        startActivity(i);
+        requireActivity().finish();
+    }
     private void showSelectedContactsAlert(String contacts) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Selection")
                 .setMessage(contacts)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .setNegativeButton("Edit", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("Edit", (dialog, which) -> gototrustedcontacts())
                 .show();
     }
 }

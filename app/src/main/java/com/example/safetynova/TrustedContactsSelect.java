@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,12 +44,18 @@ public class TrustedContactsSelect extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth fAuth;
     private FirebaseUser user;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trusted_contacts_select);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com") // Replace with actual Web Client ID
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
         // Initialize Firebase Firestore
@@ -209,17 +218,19 @@ public class TrustedContactsSelect extends AppCompatActivity {
                     put("TrustedContacts", contactNumbers);
                     put("TrustedNames",contactNames);
                 }}, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> navigateTologin())
+                .addOnSuccessListener(aVoid -> navigate())
                 .addOnFailureListener(e -> showAlertDialog("Failed to save trusted contacts: " + e.getMessage()));
     }
 
-    private void navigateToHome() {
-        Intent intent = new Intent(this, home.class);
-        startActivity(intent);
-        finish(); // Close the current activity
-    }
-    private void navigateTologin() {
-        Intent intent = new Intent(this, login.class);
+    private void navigate() {
+        Intent intent = null;
+        if(mGoogleSignInClient==null && user==null) {
+           intent = new Intent(this, login.class);
+        }
+        else
+        {
+            intent = new Intent(this, home.class);
+        }
         startActivity(intent);
         finish(); // Close the current activity
     }
