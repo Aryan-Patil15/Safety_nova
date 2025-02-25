@@ -77,7 +77,14 @@ public class Medical extends Fragment {
                             String bloodgrp = (String) medicalForm.get("blood_group");
                             String allergies = (String) medicalForm.get("allergies");
                             String medicalcondn = (String) medicalForm.get("medical_condition");
-                            Long age = Long.parseLong((String)medicalForm.get("age"));
+                            Object ageObj = medicalForm.get("age");
+                            Long age = null;
+
+                            if (ageObj instanceof Long) {
+                                age = (Long) ageObj;
+                            } else if (ageObj instanceof String) {
+                                age = Long.parseLong((String) ageObj);
+                            }
 
                             fullNameText.setText(fullName!= null ?fullName: "N/A");
                             bloodGroupText.setText(bloodgrp!= null ?bloodgrp: "N/A");
