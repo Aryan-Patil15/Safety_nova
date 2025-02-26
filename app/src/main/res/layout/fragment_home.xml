@@ -28,6 +28,8 @@
             android:layout_height="59dp"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
             android:backgroundTint="#a81c07"
             android:text="Live Location Sharing"
             android:textColor="#FFFFFF" />
@@ -38,6 +40,8 @@
             android:layout_width="0dp"
             android:layout_height="59dp"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
             android:backgroundTint="#a81c07"
             android:text="Emergency Services"
             android:textColor="#FFFFFF" />
@@ -50,6 +54,8 @@
         android:layout_marginTop="44dp"
         android:background="@drawable/circle_sos_button"
         android:text="SOS"
+        android:clickable="true"
+        android:focusable="true"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
