@@ -35,12 +35,12 @@
             android:id="@+id/btnMaleCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:backgroundTint="#00008B"
-            android:layout_marginTop="10dp"
-            android:textSize="27sp"
             android:text="📞 Male Call"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="27sp" />
 
         <Button
             android:id="@+id/btnFemaleCall"

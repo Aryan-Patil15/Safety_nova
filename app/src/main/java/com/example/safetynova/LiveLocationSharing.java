@@ -110,7 +110,7 @@ public class LiveLocationSharing extends Fragment {
                                 trustedContacts.put(trustedNamesList.get(i), trustedContactsList.get(i));
                             }
 
-                            StringBuilder contactList = new StringBuilder("Trusted Contacts:\n");
+                            StringBuilder contactList = new StringBuilder();
                             for (int i = 0; i < trustedNamesList.size() && i < trustedContactsList.size(); i++) {
                                 contactList.append(trustedNamesList.get(i))
                                         .append(" - ")
