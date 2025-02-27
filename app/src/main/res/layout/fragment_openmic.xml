@@ -37,7 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:backgroundTint="#00008B"
-            android:text="Male Call"
+            android:layout_marginTop="10dp"
+            android:textSize="27sp"
+            android:text="📞 Male Call"
             android:textColor="@color/white" />
 
         <Button
@@ -46,7 +48,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:backgroundTint="#800080"
-            android:text="Female Call"
+            android:layout_marginTop="10dp"
+            android:text="📞 Female Call"
+            android:textSize="27sp"
             android:textColor="@color/white" />
     </LinearLayout>
 
