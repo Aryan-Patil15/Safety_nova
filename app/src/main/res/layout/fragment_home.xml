@@ -30,6 +30,8 @@
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="4dp"
             android:backgroundTint="#a81c07"
             android:text="Live Location Sharing"
             android:textColor="#FFFFFF" />

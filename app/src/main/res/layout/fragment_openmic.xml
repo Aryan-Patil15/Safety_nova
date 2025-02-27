@@ -7,6 +7,18 @@
     android:background="@drawable/city">
 
     <!-- Buttons for Fake Calls -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Fake Call Simulation"
+        android:textColor="#e34540"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/fakeCallButtonsLayout"
         android:layout_width="match_parent"
