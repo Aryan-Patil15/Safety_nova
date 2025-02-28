@@ -40,16 +40,17 @@ public class openmic extends Fragment {
         btnDecline = view.findViewById(R.id.btnDecline);
 
         ringtone = MediaPlayer.create(getContext(),R.raw.ringtone);
-        ringtone.start();
         // Show fakeCallButtonsLayout initially
         showFrame(fakeCallButtonsLayout);
 
         // Click listeners
         btnMaleCall.setOnClickListener(v -> {
+            ringtone.start();
             showFrame(incomingCallLayout);
             btn = btnMaleCall;
         });
         btnFemaleCall.setOnClickListener(v -> {
+            ringtone.start();
             showFrame(incomingCallLayout);
             btn = btnFemaleCall;
         });
@@ -58,7 +59,10 @@ public class openmic extends Fragment {
             showFrame(tvFakeReply);
             play();
         });
-        btnDecline.setOnClickListener(v -> showFrame(fakeCallButtonsLayout));
+        btnDecline.setOnClickListener(v -> {
+            ringtone.stop();
+            showFrame(fakeCallButtonsLayout);
+        });
     }
     @Override
     public void onDestroy() {
