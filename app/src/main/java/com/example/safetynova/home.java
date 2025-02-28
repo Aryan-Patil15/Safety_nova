@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -89,31 +90,28 @@ public class home extends AppCompatActivity {
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragmentWithDelay(new HomeFragment(), 1000);
-                highlightTab(btnhome);
+                loadFragmentWithDelay(new HomeFragment(), 1000,btnhome);
             }
         });
 
         btnmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragmentWithDelay(new MapFragment(), 1000);
-                highlightTab(btnmap);
+                loadFragmentWithDelay(new MapFragment(), 1000,btnmap);
             }
         });
 
         btnuser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragmentWithDelay(new Profile(),1000);  // Load Profile fragment when clicked
+                loadFragmentWithDelay(new Profile(),1000,null);  // Load Profile fragment when clicked
             }
         });
 
         btnmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragmentWithDelay(new openmic(),1000);
-                highlightTab(btnmsg);
+                loadFragmentWithDelay(new openmic(),1000,btnmsg);
             }
         });
 
@@ -172,10 +170,13 @@ public class home extends AppCompatActivity {
     }
 
     // Method to load a fragment with delay
-    private void loadFragmentWithDelay(Fragment fragment, int delayMillis) {
+    private void loadFragmentWithDelay(Fragment fragment, int delayMillis,ImageButton btn) {
         new android.os.Handler().postDelayed(() -> {
             if (!isDestroyed()) { // Ensure activity is still running
                 loadFragment(fragment);
+                if (btn!=null) {
+                    highlightTab(btn);
+                }
             }
         }, delayMillis);
     }
