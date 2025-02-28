@@ -115,8 +115,6 @@ public class home extends AppCompatActivity {
             }
         });
 
-
-
         // Set up navigation item selection
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
