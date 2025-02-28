@@ -101,7 +101,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_mic_24"
+                android:src="@drawable/baseline_call_24"
                 android:contentDescription="Messages" />
         </LinearLayout>
     </RelativeLayout>

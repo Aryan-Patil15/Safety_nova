@@ -38,7 +38,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:backgroundTint="#00008B"
-            android:text="📞 Male Call"
+            android:text="✆ Male Call"
             android:textColor="@color/white"
             android:textSize="27sp" />
 
@@ -49,7 +49,7 @@
             android:layout_marginBottom="30dp"
             android:backgroundTint="#800080"
             android:layout_marginTop="10dp"
-            android:text="📞 Female Call"
+            android:text="✆ Female Call"
             android:textSize="27sp"
             android:textColor="@color/white" />
     </LinearLayout>
