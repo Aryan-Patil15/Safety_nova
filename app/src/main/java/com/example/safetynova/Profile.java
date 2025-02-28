@@ -2,11 +2,13 @@ package com.example.safetynova;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +37,7 @@ public class Profile extends Fragment {
     private FirebaseFirestore firestore;
     private FirebaseAuth fAuth;
     private FirebaseUser user;
+    private ImageView profilepicture;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -43,6 +49,7 @@ public class Profile extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
+        profilepicture=view.findViewById(R.id.profile_picture);
         profileNameTextView = view.findViewById(R.id.name);
         birthdayTextView = view.findViewById(R.id.birthday);
         phoneTextView = view.findViewById(R.id.phone);
@@ -50,6 +57,16 @@ public class Profile extends Fragment {
         emailTextView = view.findViewById(R.id.email);
         medicalInfoTextView = view.findViewById(R.id.medical_info);
         editprofilebtn=view.findViewById(R.id.edit_profile_button);
+
+        // Check if the user signed in with Google
+        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext());
+        if (googleAccount != null && googleAccount.getPhotoUrl() != null) {
+            // User signed in with Google, load photo from Google
+            loadGoogleProfilePhoto(googleAccount.getPhotoUrl());
+        } else {
+            // User did not sign in with Google, or no photo available, load from Firestore
+            loadUserProfile();
+        }
 
         medicalInfoTextView.setOnClickListener(v -> {
             Fragment fragment = new Medical();
@@ -141,6 +158,13 @@ public class Profile extends Fragment {
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "Error fetching profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+    private void loadGoogleProfilePhoto(Uri photoUrl) {
+        Glide.with(this)
+                .load(photoUrl)
+                .circleCrop()
+                .into(profilepicture);
+        loadUserProfile();
     }
 
     private void showAlertDialog(String message) {

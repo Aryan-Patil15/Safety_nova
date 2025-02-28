@@ -1,7 +1,10 @@
 package com.example.safetynova;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.MenuItem;
@@ -18,7 +21,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -28,7 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class home extends AppCompatActivity {
 
     private ImageButton btnhome, btnmap,btnmsg;
-    private ImageView side, btnuser;
+    private ImageView side, btnuser,userIcon;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private GoogleSignInClient mGoogleSignInClient;
@@ -51,6 +56,7 @@ public class home extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Find views
+        userIcon=findViewById(R.id.user_icon);
         side = findViewById(R.id.side);
         btnmap = findViewById(R.id.nav_maps);
         btnmsg=findViewById(R.id.nav_messages);
@@ -62,6 +68,11 @@ public class home extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
+        // Check if the user signed in with Google
+        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (googleAccount != null && googleAccount.getPhotoUrl() != null) {
+            loadGoogleProfilePhoto(googleAccount.getPhotoUrl());
+        }
         // Menu icon click listener
         side.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,5 +174,11 @@ public class home extends AppCompatActivity {
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void loadGoogleProfilePhoto(Uri photoUrl) {
+        Glide.with(this)
+                .load(photoUrl)
+                .circleCrop()
+                .into(userIcon);
     }
 }
