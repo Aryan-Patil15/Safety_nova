@@ -21,7 +21,7 @@ public class openmic extends Fragment {
     private ConstraintLayout incomingCallLayout;
     private TextView tvFakeReply;
     private Button btnMaleCall, btnFemaleCall, btnAccept, btnDecline,btn;
-    private MediaPlayer mediaPlayer = null;
+    private MediaPlayer ringtone,mediaPlayer = null;
 
     public openmic() {
         super(R.layout.fragment_openmic); // Ensure your XML layout filename matches
@@ -39,6 +39,8 @@ public class openmic extends Fragment {
         btnAccept = view.findViewById(R.id.btnAccept);
         btnDecline = view.findViewById(R.id.btnDecline);
 
+        ringtone = MediaPlayer.create(getContext(),R.raw.ringtone);
+        ringtone.start();
         // Show fakeCallButtonsLayout initially
         showFrame(fakeCallButtonsLayout);
 
@@ -52,6 +54,7 @@ public class openmic extends Fragment {
             btn = btnFemaleCall;
         });
         btnAccept.setOnClickListener(v -> {
+            ringtone.stop();
             showFrame(tvFakeReply);
             play();
         });
@@ -60,6 +63,7 @@ public class openmic extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ringtone.stop();
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
