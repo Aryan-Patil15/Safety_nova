@@ -1,10 +1,8 @@
 package com.example.safetynova;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.MenuItem;
@@ -15,15 +13,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -33,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class home extends AppCompatActivity {
 
     private ImageButton btnhome, btnmap,btnmsg;
-    private ImageView side, btnuser,userIcon;
+    private ImageView side, btnuser;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private GoogleSignInClient mGoogleSignInClient;
@@ -45,18 +42,7 @@ public class home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        // Initial fragment load
-        loadFragment(new HomeFragment());
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com") // Replace with actual Web Client ID
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         // Find views
-        userIcon=findViewById(R.id.user_icon);
         side = findViewById(R.id.side);
         btnmap = findViewById(R.id.nav_maps);
         btnmsg=findViewById(R.id.nav_messages);
@@ -68,11 +54,19 @@ public class home extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
-        // Check if the user signed in with Google
-        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(this);
-        if (googleAccount != null && googleAccount.getPhotoUrl() != null) {
-            loadGoogleProfilePhoto(googleAccount.getPhotoUrl());
-        }
+        // Initial fragment load
+
+        loadFragment(new HomeFragment());
+        highlightTab(btnhome);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com") // Replace with actual Web Client ID
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+
         // Menu icon click listener
         side.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +82,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadFragmentWithDelay(new HomeFragment(), 1000);
+                highlightTab(btnhome);
             }
         });
 
@@ -95,6 +90,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadFragmentWithDelay(new MapFragment(), 1000);
+                highlightTab(btnmap);
             }
         });
 
@@ -109,6 +105,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadFragmentWithDelay(new openmic(),1000);
+                highlightTab(btnmsg);
             }
         });
 
@@ -122,7 +119,29 @@ public class home extends AppCompatActivity {
             }
         });
     }
+    private void highlightTab(ImageButton selectedButton) {
+        // Reset all tabs to default
+        resetTabs();
 
+        // Highlight the selected tab
+        selectedButton.setBackgroundColor(Color.parseColor("#ADD8E6")); // Light Blue
+        selectedButton.setColorFilter(ContextCompat.getColor(this, R.color.blue), android.graphics.PorterDuff.Mode.SRC_IN);
+        selectedButton.setSelected(true);
+    }
+
+    private void resetTabs() {
+        btnhome.setBackgroundColor(Color.TRANSPARENT);
+        btnmap.setBackgroundColor(Color.TRANSPARENT);
+        btnmsg.setBackgroundColor(Color.TRANSPARENT);
+
+        btnhome.clearColorFilter();
+        btnmap.clearColorFilter();
+        btnmsg.clearColorFilter();
+
+        btnhome.setSelected(false);
+        btnmap.setSelected(false);
+        btnmsg.setSelected(false);
+    }
     // Method to load a fragment
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -174,11 +193,5 @@ public class home extends AppCompatActivity {
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-    private void loadGoogleProfilePhoto(Uri photoUrl) {
-        Glide.with(this)
-                .load(photoUrl)
-                .circleCrop()
-                .into(userIcon);
     }
 }

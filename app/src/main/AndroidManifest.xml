@@ -32,10 +32,6 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".side_main"
-            android:exported="false"
-            tools:ignore="Instantiatable,MissingClass" />
-        <activity
             android:name=".TrustedContactsSelect"
             android:exported="false" />
 
@@ -44,9 +40,6 @@
             android:exported="false" />
         <activity
             android:name=".MedicalForm"
-            android:exported="false" />
-        <activity
-            android:name=".Medical"
             android:exported="false" />
         <activity android:name=".edit_medical_info"
             android:exported="false"/>
@@ -57,9 +50,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB2Q1OeRlMZQ4h75xFWClPxRCKoA5S65aM" />
 
-                <meta-data
-                    android:name="com.facebook.sdk.ApplicationId"
-                    android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
 
 
