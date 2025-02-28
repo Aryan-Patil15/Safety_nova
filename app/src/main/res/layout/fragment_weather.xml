@@ -1,22 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center"
     android:background="@drawable/city"
+    android:fillViewport="true"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment_weather">
 
-    <TextView
-        android:id="@+id/weatherTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Fetching weather updates..."
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:padding="16dp" />
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <!-- Title TextView positioned at the top center -->
+        <TextView
+            android:id="@+id/signup_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weather Updates"
+            android:textColor="#e34540"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+        <!-- Content LinearLayout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/signup_title"
+            android:layout_marginTop="32dp">
+
+            <!-- TextView to show the current location -->
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="50dp"
+                android:text="Fetching location..."
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:padding="8dp" />
+
+            <!-- TextView to show the weather information -->
+            <TextView
+                android:id="@+id/weatherTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Fetching temperature updates..."
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:padding="8dp" />
+
+            <!-- TextView to show wind speed -->
+            <TextView
+                android:id="@+id/windTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Fetching wind speed..."
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:padding="8dp" />
+
+            <!-- TextView to show humidity -->
+            <TextView
+                android:id="@+id/humidityTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Fetching humidity..."
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:padding="8dp" />
+
+            <!-- TextView to show precipitation -->
+            <TextView
+                android:id="@+id/precipitationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Fetching precipitation..."
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:padding="8dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
