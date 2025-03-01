@@ -45,11 +45,13 @@ public class openmic extends Fragment {
 
         // Click listeners
         btnMaleCall.setOnClickListener(v -> {
+            ringtone = MediaPlayer.create(getContext(),R.raw.ringtone);
             ringtone.start();
             showFrame(incomingCallLayout);
             btn = btnMaleCall;
         });
         btnFemaleCall.setOnClickListener(v -> {
+            ringtone = MediaPlayer.create(getContext(),R.raw.ringtone);
             ringtone.start();
             showFrame(incomingCallLayout);
             btn = btnFemaleCall;
