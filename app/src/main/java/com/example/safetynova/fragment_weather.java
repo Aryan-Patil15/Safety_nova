@@ -57,12 +57,20 @@ public class fragment_weather extends Fragment {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (getActivity() == null) return; // Prevent null reference issues
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             startLocationUpdates();
         }
-        return view;
     }
 
     private void startLocationUpdates() {
@@ -86,13 +94,15 @@ public class fragment_weather extends Fragment {
             }
         };
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
         }
     }
 
     private void getLocationName(double latitude, double longitude) {
-        Geocoder geocoder = new Geocoder(requireContext());
+        if (!isAdded()) return; // Ensure fragment is still attached
+
+        Geocoder geocoder = new Geocoder(getContext());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
@@ -112,9 +122,11 @@ public class fragment_weather extends Fragment {
     }
 
     private void fetchWeather(double latitude, double longitude) {
+        if (!isAdded()) return; // Ensure fragment is still attached
+
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&units=metric&appid=" + API_KEY;
 
-        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -126,10 +138,8 @@ public class fragment_weather extends Fragment {
                                 int humidity = main.getInt("humidity");
                                 String weatherInfo = "\uD83C\uDF21\uFE0F Temperature: " + temperature + "°C";
                                 weatherTextView.setText(weatherInfo);
-                                String humudityinfo="\uD83D\uDCA7 Humidity: " + humidity + "%";
-                                humidityTextView.setText(humudityinfo);
+                                humidityTextView.setText("\uD83D\uDCA7 Humidity: " + humidity + "%");
 
-                                // Wind data (handle missing data)
                                 if (response.has("wind")) {
                                     JSONObject wind = response.getJSONObject("wind");
                                     double windSpeed = wind.getDouble("speed");
@@ -138,24 +148,21 @@ public class fragment_weather extends Fragment {
                                     windTextView.setText("\uD83C\uDF43 Wind Speed: Data not available");
                                 }
 
-                                // Precipitation data (handle missing data)
-                                String precipitationInfo = "";
+                                String precipitationInfo = "\uD83C\uDF27\uFE0F Precipitation: No data available";
                                 if (response.has("rain")) {
                                     JSONObject rain = response.getJSONObject("rain");
                                     if (rain.has("1h")) {
                                         double precipitation = rain.getDouble("1h");
                                         precipitationInfo = "\uD83C\uDF27\uFE0F Precipitation: " + precipitation + " mm";
                                     }
-                                } else {
-                                    precipitationInfo = "\uD83C\uDF27\uFE0F Precipitation: No data available";
                                 }
                                 precipitationTextView.setText(precipitationInfo);
                             } else {
-                                Toast.makeText(requireContext(), "Invalid weather data received.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Invalid weather data received.", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(requireContext(), "Error parsing weather data.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Error parsing weather data.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -163,7 +170,7 @@ public class fragment_weather extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "Error fetching weather data: " + error.getMessage());
-                        Toast.makeText(requireContext(), "Error fetching weather data.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error fetching weather data.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -171,12 +178,10 @@ public class fragment_weather extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startLocationUpdates();
-        } else {
-            Toast.makeText(requireContext(), "Permission denied to access location.", Toast.LENGTH_SHORT).show();
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (fusedLocationClient != null && locationCallback != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
 }
