@@ -134,8 +134,8 @@ public class home extends AppCompatActivity {
         resetTabs();
 
         // Highlight the selected tab
-        selectedButton.setBackgroundColor(Color.parseColor("#ADD8E6")); // Light Blue
-        selectedButton.setColorFilter(ContextCompat.getColor(this, R.color.blue), android.graphics.PorterDuff.Mode.SRC_IN);
+        selectedButton.setBackgroundColor(Color.parseColor("#ebeae8")); // Light Blue
+        selectedButton.setColorFilter(ContextCompat.getColor(this, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         selectedButton.setSelected(true);
     }
 
