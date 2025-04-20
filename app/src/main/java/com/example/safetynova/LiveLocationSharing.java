@@ -222,7 +222,7 @@ public class LiveLocationSharing extends Fragment {
         firebaseFirestore.collection("User").document(currentUserId)
                 .set(startTimeData, SetOptions.merge());
 
-        Toast.makeText(requireContext(), "Dynamic link sent to trusted contacts.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Live Tracking link sent to trusted contacts.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
