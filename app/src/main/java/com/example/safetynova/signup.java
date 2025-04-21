@@ -274,6 +274,7 @@ public class signup extends AppCompatActivity {
                     Toast.makeText(this, "Welcome " + (user != null ? user.getDisplayName() : ""), Toast.LENGTH_SHORT).show();
                 mGoogleSignInClient.signOut();
                 phone=String.valueOf(user.getPhoneNumber());
+                
                 submitDataToFirestore(user.getDisplayName(),user.getEmail(),phone,"N/A");
             } else {
                 Toast.makeText(this, "Google Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
