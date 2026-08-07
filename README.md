@@ -52,7 +52,6 @@ const firebaseConfig = {
 
 const googleMapsApiKey = "YOUR_GOOGLE_MAPS_API_KEY";
 ```
-
 #### Production Deployment (Netlify):
 This repository includes a `netlify.toml` file that automates configuration generation. When linking the repository to Netlify:
 1. Set the publish directory to `app/src/main/assets/Location`.
@@ -66,7 +65,8 @@ This repository includes a `netlify.toml` file that automates configuration gene
    - `GOOGLE_MAPS_API_KEY`
 
 ---
-
+### Notice: 
+Remember to **add the tracker page link** to "C:\Users\Dell\AndroidStudioProjects\Safety_Nova\app\src\main\java\com\example\safetynova\LiveLocationSharing.java" on line 192
 ## Technologies Used
 - **Android**: Java, Android SDK, ViewBinding
 - **Firebase**: Authentication, Firestore Database, Google Sign-In
