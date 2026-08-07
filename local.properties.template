@@ -1,0 +1,16 @@
+# SafetyNova API Keys and Configuration Template
+# --------------------------------------------------
+# Rename this file to local.properties and customize the values below.
+# DO NOT commit local.properties to version control.
+
+# Google Maps API Key
+# Used for rendering the map fragment and tracking user location.
+MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE
+
+# OpenWeatherMap API Key
+# Used to fetch live weather details for the weather fragment.
+WEATHER_API_KEY=YOUR_WEATHER_API_KEY_HERE
+
+# Location of the SDK. This is only used by Gradle.
+# Example for Windows: C\:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
+sdk.dir=YOUR_ANDROID_SDK_PATH

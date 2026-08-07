@@ -1,14 +1,4 @@
-// Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyATLMdTgM_aNtrLAPtDM0LVsgGdh1LkJTI",
-  authDomain: "safetynova-27b76.firebaseapp.com",
-  projectId: "safetynova-27b76",
-  storageBucket: "safetynova-27b76.firebasestorage.app",
-  messagingSenderId: "193867853435",
-  appId: "1:193867853435:web:839f6d53ad11789c1ffcde"
-};
-
-// Initialize Firebase
+// Initialize Firebase using firebaseConfig loaded from config.js
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
 
@@ -116,3 +106,16 @@ function startTrackingTimer(duration) {
 function pad(number) {
   return number < 10 ? '0' + number : number;
 }
+
+// Load Google Maps API dynamically using key from config.js
+(function loadGoogleMapsScript() {
+  if (typeof googleMapsApiKey === 'undefined' || !googleMapsApiKey) {
+    console.error("Google Maps API Key is not defined in config.js");
+    return;
+  }
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+})();

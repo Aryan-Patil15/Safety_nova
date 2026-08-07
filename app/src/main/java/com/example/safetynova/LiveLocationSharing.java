@@ -59,7 +59,11 @@ public class LiveLocationSharing extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         smsReceiver = new SmsReceiver();
         IntentFilter filter = new IntentFilter("SMS_SENT");
-        requireContext().registerReceiver(smsReceiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireContext().registerReceiver(smsReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            requireContext().registerReceiver(smsReceiver, filter);
+        }
     }
 
     @Override

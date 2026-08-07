@@ -3,9 +3,6 @@
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="client_id">193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com</string>
-    <string name="default_web_client_id">193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com</string>
-    <string name="YOUR_WEB_CLIENT_ID">193867853435-l3fh0m7racs996uekvj32ulbmum5chpn.apps.googleusercontent.com</string>
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -172,6 +172,6 @@ public class MapFragment extends Fragment {
             if (googleMap != null && isLocationEnabled()) {
                 checkAndRequestPermissions();
             }
-        }, 2000); // 2 seconds delay
+        }, 300); // 300ms delay for smooth loading
     }
 }

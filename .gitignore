@@ -13,3 +13,11 @@
 .externalNativeBuild
 local.properties
 .cxx
+
+# Secrets and Local configuration files
+app/google-services.json
+app/src/main/assets/Location/config.js
+
+# Local IDE configuration
+.idea/other.xml
+

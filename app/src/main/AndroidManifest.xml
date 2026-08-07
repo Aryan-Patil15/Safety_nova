@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
 
 
@@ -48,7 +47,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB2Q1OeRlMZQ4h75xFWClPxRCKoA5S65aM" />
+            android:value="${MAPS_API_KEY}" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "firebase_url": "YOUR_FIREBASE_DATABASE_URL",
+    "project_id": "YOUR_PROJECT_ID",
+    "storage_bucket": "YOUR_STORAGE_BUCKET"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "YOUR_ANDROID_APP_ID_FOR_FIREBASECONNECTION",
+        "android_client_info": {
+          "package_name": "com.example.firebaseconnection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "YOUR_OAUTH_WEB_CLIENT_ID",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_FIREBASE_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "YOUR_OAUTH_WEB_CLIENT_ID",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "YOUR_ANDROID_APP_ID_FOR_SAFETYNOVA",
+        "android_client_info": {
+          "package_name": "com.example.safetynova"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "YOUR_OAUTH_ANDROID_CLIENT_ID_1",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.safetynova",
+            "certificate_hash": "YOUR_CERTIFICATE_HASH_1"
+          }
+        },
+        {
+          "client_id": "YOUR_OAUTH_ANDROID_CLIENT_ID_2",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.safetynova",
+            "certificate_hash": "YOUR_CERTIFICATE_HASH_2"
+          }
+        },
+        {
+          "client_id": "YOUR_OAUTH_WEB_CLIENT_ID",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_FIREBASE_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "YOUR_OAUTH_WEB_CLIENT_ID",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

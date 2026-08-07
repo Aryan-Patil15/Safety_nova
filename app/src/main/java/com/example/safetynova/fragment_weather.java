@@ -42,7 +42,7 @@ public class fragment_weather extends Fragment {
     private LocationCallback locationCallback;
     private TextView weatherTextView, locationTextView, windTextView, humidityTextView, precipitationTextView;
 
-    private static final String API_KEY = "6a82827c9ebd041d71c65111a2452ad7";
+    private static final String API_KEY = BuildConfig.WEATHER_API_KEY;
     private static final String TAG = "WeatherFragment";
 
     @Nullable
